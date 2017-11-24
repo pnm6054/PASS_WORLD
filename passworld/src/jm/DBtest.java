@@ -42,8 +42,8 @@ public class DBtest {
 			acdata data;
 			// Data.member_vector.removeAllElements();
 			ArrayList<acdata> result = new ArrayList<acdata>();
-			stmt = conn.prepareStatement("select * from test"); // 쿼리문 전송
-			rs = stmt.executeQuery();
+			//stmt = conn.prepareStatement("select * from test"); // 쿼리문 전송
+			//rs = stmt.executeQuery();
 
 			while (rs.next()) { // result set이 더 있을 경우
 				acdata data1 = new acdata();
