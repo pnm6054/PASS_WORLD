@@ -1,23 +1,23 @@
-package jm;
+/*package jm;
 
 import java.sql.*;
 import java.util.ArrayList;
 
 import passworld.acdata;
 
-/**
+*//**
  * mysql로 회원 정보를 전송하는 Class
- */
+ *//*
 public class DBtest {
 
-	/*
+	
 	 * private static String DB_ID = "memory"; private static String DB_PASSWORD =
 	 * "0238"; private static String DB_NAME = "memory"; private static String DB_IP
 	 * = "localhost"; private static int DB_PORT = 3306;
 	 * 
 	 * private static String DB_Connect = "jdbc:mysql://" + DB_IP + ":" + DB_PORT +
 	 * "/" + DB_NAME;
-	 */
+	 
 	static Connection conn;
 	 PreparedStatement stmt;
 	static ResultSet rs;
@@ -47,12 +47,12 @@ public class DBtest {
 
 			while (rs.next()) { // result set이 더 있을 경우
 				acdata data1 = new acdata();
-				/*
+				
 				 * data1.siteid = rs.getString("id"); data1.keyword = rs.getString("pw");
 				 * data1.id = rs.getString("email"); data1.pw = rs.getString("name");
 				 * data1.madedate = Integer.parseInt(rs.getString("pwQuestion")); data1.pwAnswer
 				 * = rs.getString("pwAnswer");
-				 */
+				 
 				data1.setIndex(rs.getInt("rowid"));
 				data1.setSiteid(rs.getString("siteid"));
 				data1.setKeyword(rs.getString("keyword"));
@@ -115,17 +115,18 @@ public class DBtest {
 		}
 	}
 
-	/*
+	
 	 * public int isPWCorrect(String id, String pw){ int i; for(i=0;
 	 * i<acdata.member_vector.size(); i++){
 	 * if(Data.member_vector.elementAt(i).id.equals(id) &&
 	 * Data.member_vector.elementAt(i).pw.equals(pw)){ return i; // 아이디 비번이 일치하면
 	 * 로그인한 유저 인덱스 반환 } } System.out.println(Data.member_vector.size()); return -1;
 	 * // 존재하지 않을 경우 -1 반환 }
-	 */
+	 
 public static void main(String[] args) {
 	getMember();
 		
-		/*insert.insert(siteid,keyword,id,pw,madedate);*/
+		insert.insert(siteid,keyword,id,pw,madedate);
 	}
 }
+*/
