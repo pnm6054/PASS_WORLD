@@ -34,7 +34,7 @@ public class DBtest2 {
 	Connection conn;
 	PreparedStatement stmt;
 	ResultSet rs;
-	static ArrayList<acdata> result = new ArrayList<acdata>();
+	ArrayList<acdata> result = new ArrayList<acdata>();
 
 	public DBtest2() {
 		connectDB();
@@ -95,9 +95,11 @@ public class DBtest2 {
 				data1.setId(rs.getString("id"));
 				data1.setPw(rs.getString("pw"));
 				data1.setMadedate(rs.getString("makedate"));
+				data1.setcount(rs.getInt("count"));
 
 				System.out.println(rs.getInt("rowid") + "\t" + rs.getString("siteid") + "\t" + rs.getString("keyword")
-						+ "\t" + rs.getString("id") + "\t" + rs.getString("pw") + "\t" + rs.getString("makedate"));
+						+ "\t" + rs.getString("id") + "\t" + rs.getString("pw") + "\t" + rs.getString("makedate")+
+						"\t" + rs.getInt("count"));
 				result.add(data1);
 			}
 			isSuccess = true;
@@ -109,7 +111,7 @@ public class DBtest2 {
 
 	protected boolean insertAccount(String siteid, String keyword, String id, String pw, String makedate) {
 		boolean isSuccess = true;
-		String sql = "INSERT INTO Main(siteid, keyword, id, pw,makedate) VALUES(?,?,?,?,?)";
+		String sql = "INSERT INTO Main(siteid, keyword, id, pw, makedate) VALUES(?,?,?,?,?)";
 		try {
 			// String sql = "insert into Main(siteid,id,pw) values(\'" + siteid + "\', \'" +
 			// id + "\', \'" + pw + "\');";
@@ -119,7 +121,7 @@ public class DBtest2 {
 			stmt.setString(3, id);
 			stmt.setString(4, pw);
 			stmt.setString(5, makedate);
-			System.out.println(stmt.executeUpdate());
+			stmt.executeUpdate();
 		} catch (SQLException e) {
 			System.err.println("Error : Insert Account\n");
 			System.out.println(e.getMessage());
