@@ -1,21 +1,21 @@
-package jm;
+/*package jm;
 
 
 import java.sql.*;
 
-/**
+*//**
  * mysql로 회원 정보를 전송하는 Class
- */
+ *//*
 public class DB {
    private static String DB_ID = "memory";
-   /*
+   
     * private static String DB_PASSWORD = "0238"; private static String DB_NAME
     * = "memory"; private static String DB_IP = "localhost"; private static int
     * DB_PORT = 3306;
     * 
     * private static String DB_Connect = "jdbc:mysql://" + DB_IP + ":" +
     * DB_PORT + "/" + DB_NAME;
-    */
+    
    Connection conn;
    PreparedStatement stmt;
    ResultSet rs;
@@ -37,8 +37,8 @@ public class DB {
    public boolean getMember() { // 유저 정보 갱신
       boolean isSuccess = false;
       try {
-         MemberInfo m;
-         Data.member_vector.removeAllElements();
+         //MemberInfo m;
+        // Data.member_vector.removeAllElements();
          stmt = conn.prepareStatement("select * from member"); // 쿼리문 전송
          rs = stmt.executeQuery();
 
@@ -116,4 +116,4 @@ public class DB {
    }
 
    
-}
+}*/

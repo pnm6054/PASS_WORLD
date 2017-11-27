@@ -67,6 +67,10 @@ public class GoogleAuthTest
     private static int VALIDATION_CODE = 911556;
 
 
+    public GoogleAuthTest() {
+    	setupMockCredentialRepository();
+    }
+    
     public static void setupMockCredentialRepository()
     {
         System.setProperty(
@@ -86,7 +90,7 @@ public class GoogleAuthTest
 
         return ret;
     }
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
     	
     	setupMockCredentialRepository();
     	
@@ -95,7 +99,7 @@ public class GoogleAuthTest
     	authoriseUser("201561");
 
     	System.out.println(VALIDATION_CODE);
-    }
+    }*/
 
     public void createCredentials()
     {

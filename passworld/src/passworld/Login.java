@@ -5,16 +5,21 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JTextField;
 import javax.swing.JTextArea;
 import javax.swing.JPasswordField;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import java.awt.Color;
+import java.awt.Dimension;
 
 public class Login extends JFrame {
 
@@ -23,7 +28,7 @@ public class Login extends JFrame {
 	private JTextField textField_1;
 	private JPasswordField passwordField;
 	private JPasswordField passwordField_1;
-
+	DBtest2 db = new DBtest2();
 	/**
 	 * Launch the application.
 	 */
@@ -44,76 +49,128 @@ public class Login extends JFrame {
 	 * Create the frame.
 	 */
 	public Login() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 464);
-		contentPane = new JPanel();
-		contentPane.setBackground(Color.WHITE);
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(contentPane);
-		contentPane.setLayout(null);
+		
 		setTitle("PASS WORLD");
 		setIconImage(Toolkit.getDefaultToolkit().getImage("src/1.png"));
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		Dimension d = getToolkit().getScreenSize();
+		setSize(450, 500);
+		setLocation(d.width/2 - getWidth()/2, d.height/2 - getHeight()/2);
+        
+		contentPane = new JPanel();
+		contentPane.setBackground(Color.WHITE);
+		//contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		Border lineBorder = BorderFactory.createLineBorder(Color.GRAY, 1);
 		
-		JLabel lblSite = new JLabel("Site ¿Ã∏ß");
-		lblSite.setFont(new Font("±º∏≤", Font.PLAIN, 17));
-		lblSite.setBounds(96, 50, 65, 20);
-		contentPane.add(lblSite);
+		JLabel Sitename = new JLabel("site ¿Ã∏ß");
+		Sitename.setBounds(65, 50, 100, 20);
+		Sitename.setFont(new Font("±º∏≤", Font.PLAIN, 17));
+		Sitename.setHorizontalAlignment(JLabel.RIGHT);
 		
-		textField = new JTextField();
-		textField.setBounds(173, 51, 154, 21);
-		contentPane.add(textField);
-		textField.setColumns(10);
+		JTextField field_SN = new JTextField();
+		field_SN.setBounds(175, 51, 154, 21);
+		field_SN.setColumns(10);
 		
-		JLabel lblKeyWord = new JLabel("Key Word");
-		lblKeyWord.setFont(new Font("±º∏≤", Font.PLAIN, 17));
-		lblKeyWord.setBounds(90, 80, 71, 20);
-		contentPane.add(lblKeyWord);
+		JLabel Keyword = new JLabel("Key Word");
+		Keyword.setFont(new Font("±º∏≤", Font.PLAIN, 17));
+		Keyword.setBounds(65, 80, 100, 20);
+		Keyword.setHorizontalAlignment(JLabel.RIGHT);
 		
+		JTextArea field_KW = new JTextArea(1,1);
+		field_KW.setBounds(175, 80, 154, 40);
+		field_KW.setCaretPosition(field_KW.getText().length());
+		field_KW.setLineWrap(true);
+		field_KW.setWrapStyleWord(true);
+		field_KW.setColumns(10);
+		//Border emptyBorder = BorderFactory.createEmptyBorder(7, 7, 7, 7);
+		field_KW.setBorder(lineBorder);
+		field_KW.setEditable(true);
+		
+		JLabel ID = new JLabel("ID");
+		ID.setFont(new Font("±º∏≤", Font.PLAIN, 17));
+		ID.setBounds(65, 130, 100, 20);
+		ID.setHorizontalAlignment(JLabel.RIGHT);
+		
+		JTextField field_ID = new JTextField();
+		field_ID.setBounds(175, 130, 154, 21);
+		field_ID.setColumns(10);
+		
+		JLabel PW = new JLabel("æœ»£");
+		PW.setFont(new Font("±º∏≤", Font.PLAIN, 17));
+		PW.setBounds(65, 160, 100, 20);
+		PW.setHorizontalAlignment(JLabel.RIGHT);
+		
+		JPasswordField field_PW = new JPasswordField();
+		field_PW.setBounds(175, 160, 154, 21);
+		
+		JTextArea safetycheck = new JTextArea("naer");
+		safetycheck.setBounds(175, 190, 154, 40);
+		safetycheck.setCaretPosition(field_KW.getText().length());
+		safetycheck.setLineWrap(true);
+		safetycheck.setWrapStyleWord(true);
+		safetycheck.setColumns(10);
+		safetycheck.setBorder(lineBorder);
+		//Border emptyBorder = BorderFactory.createEmptyBorder(7, 7, 7, 7);
+		safetycheck.setEditable(false);
+		
+		JLabel re_PW = new JLabel("æœ»£ ¿Á»Æ¿Œ");
+		re_PW.setFont(new Font("±º∏≤", Font.PLAIN, 17));
+		re_PW.setBounds(65, 240, 100, 20);
+		re_PW.setHorizontalAlignment(JLabel.RIGHT);
 
-		textField = new JTextField();
-		textField.setBounds(173, 82, 154, 21);
-		contentPane.add(textField);
-		textField.setColumns(10);
-		/*JTextArea textArea = new JTextArea();
-		textArea.setBounds(173, 82, 154, 21);
-		contentPane.add(textArea);*/
+		JPasswordField field_re_PW = new JPasswordField();
+		field_re_PW.setBounds(175, 242, 154, 22);
 		
-		JLabel lblId = new JLabel("ID");
-		lblId.setFont(new Font("±º∏≤", Font.PLAIN, 17));
-		lblId.setBounds(127, 213, 34, 20);
-		contentPane.add(lblId);
+		JLabel pw_eq = new JLabel("∫Òπ¯∆≤∏≤");
+		pw_eq.setFont(new Font("±º∏≤", Font.PLAIN, 17));
+		pw_eq.setBounds(175, 270, 154, 20);
+		pw_eq.setHorizontalAlignment(JLabel.LEFT);
 		
-		textField_1 = new JTextField();
-		textField_1.setBounds(173, 214, 154, 21);
-		contentPane.add(textField_1);
-		textField_1.setColumns(10);
+		JLabel makedate = new JLabel("µÓ∑œ¿œ¿⁄");
+		makedate.setFont(new Font("±º∏≤", Font.PLAIN, 17));
+		makedate.setBounds(65, 300, 100, 20);
+		makedate.setHorizontalAlignment(JLabel.RIGHT);
 		
-		JLabel lblPassword = new JLabel("Password");
-		lblPassword.setFont(new Font("±º∏≤", Font.PLAIN, 17));
-		lblPassword.setBounds(90, 243, 71, 20);
-		contentPane.add(lblPassword);
-		
-		passwordField = new JPasswordField();
-		passwordField.setBounds(173, 245, 154, 20);
-		contentPane.add(passwordField);
-		
-		JLabel lblPasswordWaw = new JLabel("Password ¿Á¿‘∑¬");
-		lblPasswordWaw.setFont(new Font("±º∏≤", Font.PLAIN, 17));
-		lblPasswordWaw.setBounds(42, 302, 125, 20);
-		contentPane.add(lblPasswordWaw);
-		
-		passwordField_1 = new JPasswordField();
-		passwordField_1.setBounds(173, 302, 154, 22);
-		contentPane.add(passwordField_1);
+		JTextField field_mkdate = new JTextField();
+		field_mkdate.setBounds(175, 300, 154, 21);
+		field_mkdate.setColumns(10);
 		
 		JButton btnAfd = new JButton("»Æ¿Œ");
 		btnAfd.setBackground(new Color(255,139,139));
-		btnAfd.setBounds(90, 355, 100, 30);
-		contentPane.add(btnAfd);
+		btnAfd.setBounds(105, 380, 100, 30);
+		btnAfd.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				db.insertAccount(field_SN.getText(), field_KW.getText(), field_ID.getText(), field_PW.getText(), field_mkdate.getText());
+			}
+		});
 		
 		JButton btnGhkrdls = new JButton("√Îº“");
 		btnGhkrdls.setBackground(new Color(255,139,139));
-		btnGhkrdls.setBounds(230, 355, 100, 30);
+		btnGhkrdls.setBounds(245, 380, 100, 30);
+		btnGhkrdls.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+			}
+		});
+
+		contentPane.add(Sitename);
+		contentPane.add(field_SN);
+		contentPane.add(Keyword);
+		contentPane.add(field_KW);
+		contentPane.add(ID);
+		contentPane.add(field_ID);
+		contentPane.add(PW);
+		contentPane.add(field_PW);
+		contentPane.add(re_PW);
+		contentPane.add(field_re_PW);
+		contentPane.add(safetycheck);
+		contentPane.add(makedate);
+		contentPane.add(field_mkdate);
+		contentPane.add(pw_eq);
+		
+		contentPane.add(btnAfd);
 		contentPane.add(btnGhkrdls);
 	}
 }

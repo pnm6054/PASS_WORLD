@@ -4,7 +4,6 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Vector;
 
-
 /**
  * connect to ext/main.db schema of main.db's table 'Main'
  * <p/>
@@ -36,7 +35,7 @@ public class DBtest2 {
 	PreparedStatement stmt;
 	ResultSet rs;
 	ArrayList<acdata> result = new ArrayList<acdata>();
-	
+
 	public DBtest2() {
 		connectDB();
 	}
@@ -78,18 +77,53 @@ public class DBtest2 {
 		return isSuccess;
 	}
 
-	protected boolean insertMember(String siteid, String id, String pw) {
-		boolean isSuccess = true;
-		String sql = "INSERT INTO Main(siteid, id, pw) VALUES(?,?,?)";
+	public boolean search(String word) { // 유저 정보 갱신
+		boolean isSuccess = false;
 		try {
-			//String sql = "insert into Main(siteid,id,pw) values(\'" + siteid + "\', \'" + id + "\', \'" + pw + "\');";
+			System.out.println(word);
+			stmt = conn.prepareStatement("SELECT rowid,*" + "FROM Main WHERE siteid like ? or keyword like ?"); // 쿼리문
+																												// 전송
+			stmt.setString(1, '%' + word + '%');
+			stmt.setString(2, '%' + word + '%');
+			rs = stmt.executeQuery();
+
+			while (rs.next()) { // result set이 더 있을 경우
+				acdata data1 = new acdata();
+				data1.setIndex(rs.getInt("rowid"));
+				data1.setSiteid(rs.getString("siteid"));
+				data1.setKeyword(rs.getString("keyword"));
+				data1.setId(rs.getString("id"));
+				data1.setPw(rs.getString("pw"));
+				data1.setMadedate(rs.getString("makedate"));
+				data1.setcount(rs.getInt("count"));
+
+				System.out.println(rs.getInt("rowid") + "\t" + rs.getString("siteid") + "\t" + rs.getString("keyword")
+						+ "\t" + rs.getString("id") + "\t" + rs.getString("pw") + "\t" + rs.getString("makedate")+
+						"\t" + rs.getInt("count"));
+				result.add(data1);
+			}
+			isSuccess = true;
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+		return isSuccess;
+	}
+
+	protected boolean insertAccount(String siteid, String keyword, String id, String pw, String makedate) {
+		boolean isSuccess = true;
+		String sql = "INSERT INTO Main(siteid, keyword, id, pw, makedate) VALUES(?,?,?,?,?)";
+		try {
+			// String sql = "insert into Main(siteid,id,pw) values(\'" + siteid + "\', \'" +
+			// id + "\', \'" + pw + "\');";
 			stmt = conn.prepareStatement(sql);
 			stmt.setString(1, siteid);
-			stmt.setString(2, id);
-			stmt.setString(3, pw);
-			stmt.execute();
+			stmt.setString(2, keyword);
+			stmt.setString(3, id);
+			stmt.setString(4, pw);
+			stmt.setString(5, makedate);
+			stmt.executeUpdate();
 		} catch (SQLException e) {
-			System.err.println("Error : Insert Member\n");
+			System.err.println("Error : Insert Account\n");
 			System.out.println(e.getMessage());
 			isSuccess = false;
 		}
@@ -100,8 +134,9 @@ public class DBtest2 {
 			String groupname, String snsAddress, String hash, String gender) {
 		boolean isSuccess = false;
 		try {
-			/*MemberInfo m;
-			Data.member_vector.removeAllElements();*/
+			/*
+			 * MemberInfo m; Data.member_vector.removeAllElements();
+			 */
 
 			stmt = conn.prepareStatement("insert into address(name) values('kangmin')");
 			String sql = "insert into address values(\'" + "kangmin" + "\', \'" + phone + "\', \'" + email + "\', \'"

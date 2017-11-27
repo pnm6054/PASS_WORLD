@@ -9,29 +9,33 @@ public class acdata {
 	/**
 	 * @param index rowid of data in db. (user can't see this data)
 	 */
-	 int index;
+	 private int index;
 	/**
 	 * @param siteid the site's name
 	 */
-	 String siteid;
+	 private String siteid;
 	/**
 	 * @param keyword the keyword for searching
 	 */
-	 String keyword;
+	 private String keyword;
 	/**
 	 * @param id user's id of site
 	 */
-	 String id;
+	 private String id;
 	/**
 	 * @param pw user's password of site
 	 */
-	 String pw;
+	 private String pw;
 	/**
 	 * @param madedate date when information changed. default : date when information added
 	 */
-	 String madedate;
+	 private String madedate;
+	 
+	 private int count;
+	 
+	 public boolean isSelected = false;
 	
-	
+	 //public boolean isSelected;
 	/**
 	 * Returns the rowid of account data
 	 * @return index
@@ -92,4 +96,14 @@ public class acdata {
 	 * @param madedate created date from db
 	 */
 	public void setMadedate(String madedate) {this.madedate = madedate;}
+	/**
+	 * Set the madedate Value of instance
+	 * @param count created date from db
+	 */
+	public int getcount() {return count;}
+	/**
+	 * Set the madedate Value of instance
+	 * @param count created date from db
+	 */
+	public void setcount(int count) {this.count = count;}
 }

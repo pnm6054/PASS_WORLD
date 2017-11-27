@@ -10,13 +10,13 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
  
 
-public class First extends JFrame implements ActionListener {
+public class First extends JFrame {
 
 	private test_4all main;
 	private JPanel contentPane;
 	private JPasswordField passwordField;
 	boolean bLoginCheck = false;
-
+	GoogleAuthTest OTP;
 	/**
 	 * Launch the application.
 	 */
@@ -43,7 +43,7 @@ public class First extends JFrame implements ActionListener {
 	public First() {
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+		OTP = new GoogleAuthTest();
 		setIconImage(Toolkit.getDefaultToolkit().getImage("src/1.png"));
 		setTitle("PASS WORLD");
 		contentPane = new JPanel();
@@ -69,7 +69,6 @@ public class First extends JFrame implements ActionListener {
 		getContentPane().add(btnLogin);
 		btnLogin.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                System.out.println("sssss");
                 isLoginCheck();
             }
         });
@@ -91,7 +90,7 @@ public class First extends JFrame implements ActionListener {
 
 	public void isLoginCheck(){
 		GoogleAuthTest.setupMockCredentialRepository();
-        if(GoogleAuthTest.authoriseUser(passwordField.getText())){
+        if(OTP.authoriseUser(passwordField.getText())){
             JOptionPane.showMessageDialog(null, "Success");
             bLoginCheck = true;
            
@@ -99,10 +98,11 @@ public class First extends JFrame implements ActionListener {
             if(isLogin()){
                 GUI_Main main = new GUI_Main(); // 메인창 메소드를 이용해 창뛰우기
                 main.main(null);
-                
+                dispose();
             }                  
         }else{
-            JOptionPane.showMessageDialog(null, "Faild");
+            JOptionPane.showMessageDialog(null, "Faild"); //otp코드 미일치시 메세지 출력
+            passwordField.setText(""); //otp코드 미일치시 초기화
         }
     }
    
@@ -116,11 +116,6 @@ public class First extends JFrame implements ActionListener {
         return bLoginCheck;
     }
 
-	@Override
-	public void actionPerformed(ActionEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
 }
 
 class login_Field extends JPanel
