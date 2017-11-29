@@ -197,6 +197,7 @@ public class DBtest2 {
 		}
 		return isSuccess;
 	}
+	
 
 	protected void closeDB() {
 		try {

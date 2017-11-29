@@ -38,6 +38,7 @@ import com.warrenstrange.googleauth.GoogleAuthenticatorQRGenerator;
 import com.warrenstrange.googleauth.KeyRepresentation;
 
 import java.math.BigInteger;
+import java.sql.*;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -63,14 +64,35 @@ public class GoogleAuthTest
 
     // Change this to the saved secret from the running the above test.
 
-    private static final String SECRET_KEY = "2QV45ZM5LWEEBO6M";
+    private static String SECRET_KEY = "2QV45ZM5LWEEBO6L";
     private static int VALIDATION_CODE = 911556;
-
-
+    private static String username = "Default";
+    DBtest2 db = new DBtest2();
     public GoogleAuthTest() {
+    	loadInfo();
     	setupMockCredentialRepository();
     }
     
+    private void loadInfo() {
+    	Connection conn = null;
+    	Statement stat = null;
+    	ResultSet rs = null;
+		try {
+			// db parameters
+			String url = "jdbc:sqlite:ext/main.db";
+			// create a connection to the database
+			conn = DriverManager.getConnection(url);
+			            
+			System.out.println("Connection to SQLite has been established.");
+			
+			stat = conn.createStatement();
+			rs = stat.executeQuery("select * from Google_Auth");
+			username = rs.getString("username");
+			SECRET_KEY = rs.getString("secretcode");
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
     public static void setupMockCredentialRepository()
     {
         System.setProperty(
@@ -156,7 +178,7 @@ public class GoogleAuthTest
                         .setWindowSize(5)
                         .setCodeDigits(6);
         GoogleAuthenticator ga = new GoogleAuthenticator(gacb.build());
-        boolean isCodeValid = ga.authorizeUser("PASS WORLD", Integer.parseInt(VALIDATION_CODE));
+        boolean isCodeValid = ga.authorizeUser(username, Integer.parseInt(VALIDATION_CODE));
 
         System.out.println("Check VALIDATION_CODE = " + isCodeValid);
         
