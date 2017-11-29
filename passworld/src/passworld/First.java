@@ -8,7 +8,6 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
- 
 
 public class First extends JFrame {
 
@@ -17,6 +16,7 @@ public class First extends JFrame {
 	private JPasswordField passwordField;
 	boolean bLoginCheck = false;
 	GoogleAuthTest OTP;
+
 	/**
 	 * Launch the application.
 	 */
@@ -28,7 +28,8 @@ public class First extends JFrame {
 					frame.setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
 					Dimension frameSize = frame.getSize();
 					Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-					frame.setLocation((screenSize.width - frameSize.width)/2, (screenSize.height - frameSize.height)/2);
+					frame.setLocation((screenSize.width - frameSize.width) / 2,
+							(screenSize.height - frameSize.height) / 2);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -41,7 +42,7 @@ public class First extends JFrame {
 	 * Create the frame.
 	 */
 	public First() {
-		
+
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		OTP = new GoogleAuthTest();
 		setIconImage(Toolkit.getDefaultToolkit().getImage("src/1.png"));
@@ -51,28 +52,28 @@ public class First extends JFrame {
 		contentPane.setLayout(null);
 		contentPane.setBackground(Color.WHITE);
 		setResizable(false);
-		
+
 		JLabel lblCode = new JLabel("code");
 		lblCode.setFont(new Font("굴림", Font.PLAIN, 21));
 		lblCode.setBounds(46, 59, 61, 24);
 		lblCode.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(lblCode);
-		
+
 		passwordField = new JPasswordField();
 		passwordField.setBounds(101, 59, 156, 28);
 		contentPane.add(passwordField);
-	    
+
 		JButton btnLogin = new JButton("Login");
-		btnLogin.setBackground(new Color(255,139,139));
+		btnLogin.setBackground(new Color(255, 139, 139));
 		btnLogin.setFont(new Font("굴림", Font.PLAIN, 16));
 		btnLogin.setBounds(269, 61, 75, 26);
 		getContentPane().add(btnLogin);
 		btnLogin.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                isLoginCheck();
-            }
-        });
-		
+			public void actionPerformed(ActionEvent e) {
+				isLoginCheck();
+			}
+		});
+
 		JButton button = new JButton("회원등록");
 		button.setBackground(Color.WHITE);
 		button.setFont(new Font("굴림", Font.PLAIN, 17));
@@ -82,50 +83,48 @@ public class First extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 			}
 		});
-		
+
 	}
+
 	public static final int DEFAULT_WIDTH = 430;
 	public static final int DEFAULT_HEIGHT = 250;
 
-
-	public void isLoginCheck(){
+	public void isLoginCheck() {
 		GoogleAuthTest.setupMockCredentialRepository();
-        if(OTP.authoriseUser(passwordField.getText())){
-            JOptionPane.showMessageDialog(null, "Success");
-            bLoginCheck = true;
-           
-            // 로그인 성공이라면 매니져창 뛰우기
-            if(isLogin()){
-                GUI_Main main = new GUI_Main(); // 메인창 메소드를 이용해 창뛰우기
-                main.main(null);
-                dispose();
-            }                  
-        }else{
-            JOptionPane.showMessageDialog(null, "Faild"); //otp코드 미일치시 메세지 출력
-            passwordField.setText(""); //otp코드 미일치시 초기화
-        }
-    }
-   
-    // mainProcess와 연동
-    public void setMain(test_4all main) {
-        this.main = main;
-    }
-   
- 
-    public boolean isLogin() {     
-        return bLoginCheck;
-    }
+		if (OTP.authoriseUser(passwordField.getText())) {
+			JOptionPane.showMessageDialog(null, "Success");
+			bLoginCheck = true;
+
+			// 로그인 성공이라면 매니져창 뛰우기
+			if (isLogin()) {
+				GUI_Main main = new GUI_Main(); // 메인창 메소드를 이용해 창뛰우기
+				main.main(null);
+				dispose();
+			}
+		} else {
+			JOptionPane.showMessageDialog(null, "Faild"); // otp코드 미일치시 메세지 출력
+			passwordField.setText(""); // otp코드 미일치시 초기화
+		}
+	}
+
+	// mainProcess와 연동
+	public void setMain(test_4all main) {
+		this.main = main;
+	}
+
+	public boolean isLogin() {
+		return bLoginCheck;
+	}
 
 }
 
-class login_Field extends JPanel
-{
+class login_Field extends JPanel {
 	public login_Field() {
-		
+
 		setBackground(Color.WHITE);
-		
+
 		JButton btnLogin = new JButton("Login");
-		btnLogin.setBackground(new Color(255,139,139));
+		btnLogin.setBackground(new Color(255, 139, 139));
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			}
@@ -133,15 +132,12 @@ class login_Field extends JPanel
 		btnLogin.setFont(new Font("굴림", Font.PLAIN, 16));
 		btnLogin.setBounds(269, 61, 75, 26);
 		add(btnLogin);
-		
+
 		JLabel lblCode = new JLabel("code");
 		lblCode.setFont(new Font("굴림", Font.PLAIN, 21));
 		lblCode.setBounds(46, 59, 61, 24);
-		//lblCode.setBorder(new EmptyBorder(5, 5, 5, 5));
+		// lblCode.setBorder(new EmptyBorder(5, 5, 5, 5));
 		add(lblCode);
 	}
-	
-	
- 
-}
 
+}

@@ -22,6 +22,7 @@ public class GUI_Main extends JFrame {
 	DBtest2 db = new DBtest2();
 	PageTableModel model;
 	JTable result_table;
+	Login lg = new Login();
 
 	public GUI_Main()  {
 		super("PASS WORLD");
@@ -80,41 +81,15 @@ public class GUI_Main extends JFrame {
 		result_table.setRowHeight(20);
 		result_table.addMouseListener(new MouseListener() {
 			public void mouseClicked(MouseEvent e) {
-				// TODO Auto-generated method stub
-
 				// 이벤트가 일어난 객체 얻기
 				JTable j = (JTable) e.getComponent();
-
 				// 체크박를 클릭할때만 값을 얻어 저장
-			
 				if(j.getSelectedColumn()==0) model.data.get(j.getSelectedRow()).isSelected=!model.data.get(j.getSelectedRow()).isSelected;
 			}
-
-
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void mousePressed(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				// TODO Auto-generated method stub
-				
-			}
-			
+			public void mouseEntered(MouseEvent e) {}
+			public void mouseExited(MouseEvent e) {}
+			public void mousePressed(MouseEvent e) {}
+			public void mouseReleased(MouseEvent e) {}
 		});
 		// Create the scroll pane and add the table to it.
 		JScrollPane scrollPane = new JScrollPane(result_table);
@@ -167,6 +142,16 @@ public class GUI_Main extends JFrame {
 		// Color.BLACK));
 		modification.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				int i = 0;
+				while( i<db.result.size()) {
+					if(db.result.get(i).isSelected==true) {
+						System.out.println(db.result.get(i).getIndex());
+						db.search(db.result.get(i).getIndex());
+						Login.main(null);
+						lg.prepareUpdate(db.tmpdata);
+					}
+				System.out.println(db.result.get(i).getIndex() + " "+ db.result.get(i).isSelected +" "+ db.result.get(i++).getSiteid());
+				}
 				
 			}
 		});

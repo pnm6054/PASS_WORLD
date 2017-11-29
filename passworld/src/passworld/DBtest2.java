@@ -35,6 +35,7 @@ public class DBtest2 {
 	PreparedStatement stmt;
 	ResultSet rs;
 	ArrayList<acdata> result = new ArrayList<acdata>();
+	acdata tmpdata = new acdata();
 
 	public DBtest2() {
 		connectDB();
@@ -108,6 +109,35 @@ public class DBtest2 {
 		}
 		return isSuccess;
 	}
+	
+	public boolean search(int rowid) { // 유저 정보 갱신
+		boolean isSuccess = false;
+		try {
+			System.out.println(rowid);
+			stmt = conn.prepareStatement("SELECT rowid,*" + "FROM Main WHERE rowid = ?"); // 쿼리문전송
+																				
+			stmt.setInt(1, rowid);
+			rs = stmt.executeQuery();
+
+			// result set이 더 있을 경우
+			tmpdata.setIndex(rs.getInt("rowid"));
+			tmpdata.setSiteid(rs.getString("siteid"));
+			tmpdata.setKeyword(rs.getString("keyword"));
+			tmpdata.setId(rs.getString("id"));
+			tmpdata.setPw(rs.getString("pw"));
+			tmpdata.setMadedate(rs.getString("makedate"));
+			tmpdata.setcount(rs.getInt("count"));
+
+			System.out.println(rs.getInt("rowid") + "\t" + rs.getString("siteid") + "\t" + rs.getString("keyword")
+					+ "\t" + rs.getString("id") + "\t" + rs.getString("pw") + "\t" + rs.getString("makedate")+
+					"\t" + rs.getInt("count"));
+			isSuccess = true;
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+		return isSuccess;
+	}
+	
 
 	protected boolean insertAccount(String siteid, String keyword, String id, String pw, String makedate) {
 		boolean isSuccess = true;
@@ -130,26 +160,7 @@ public class DBtest2 {
 		return isSuccess;
 	}
 
-	public boolean insertaddress(String name, String phone, String email, String major, int code, String birthday,
-			String groupname, String snsAddress, String hash, String gender) {
-		boolean isSuccess = false;
-		try {
-			/*
-			 * MemberInfo m; Data.member_vector.removeAllElements();
-			 */
-
-			stmt = conn.prepareStatement("insert into address(name) values('kangmin')");
-			String sql = "insert into address values(\'" + "kangmin" + "\', \'" + phone + "\', \'" + email + "\', \'"
-					+ major + "\', " + code + ", \'" + birthday + "\', \'" + groupname + "\', \'" + snsAddress
-					+ "\', \'" + hash + "\', \'" + gender + "\');";
-
-			isSuccess = stmt.execute(sql);
-		} catch (SQLException e) {
-			System.err.println("Error : Insert Member");
-		}
-		System.out.println("success");
-		return isSuccess;
-	}
+	
 	protected boolean deleteAccount(int rowid) {
 		boolean isSuccess = true;
 		String sql = "DELETE FROM Main WHERE rowid = ?";
@@ -162,6 +173,25 @@ public class DBtest2 {
 			stmt.executeUpdate();
 		} catch (SQLException e) {
 			System.err.println("Error : Can't delete\n");
+			System.out.println(e.getMessage());
+			isSuccess = false;
+		}
+		return isSuccess;
+	}
+	
+	protected boolean updateAccount(acdata data) {
+		boolean isSuccess = true;
+		String sql = "update from Main set siteid = ?, keyword = ?, id = ?, pw = ?, makedate = currentdate where rowid = ?";
+		try {
+			stmt = conn.prepareStatement(sql);
+			stmt.setString(1, data.getId());
+			stmt.setString(2, data.getKeyword());
+			stmt.setString(3, data.getId());
+			stmt.setString(4, data.getPw());
+			stmt.setInt(5,data.getIndex());
+			stmt.executeUpdate();
+		}catch(SQLException e) {
+			System.err.println("Error : Can't update\n");
 			System.out.println(e.getMessage());
 			isSuccess = false;
 		}
