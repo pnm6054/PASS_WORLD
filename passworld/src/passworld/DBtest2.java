@@ -150,6 +150,23 @@ public class DBtest2 {
 		System.out.println("success");
 		return isSuccess;
 	}
+	protected boolean deleteAccount(int rowid) {
+		boolean isSuccess = true;
+		String sql = "DELETE FROM Main WHERE rowid = ?";
+		try {
+			// set the corresponding param
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, rowid);
+			System.out.println(sql);
+			// execute the delete statement
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			System.err.println("Error : Can't delete\n");
+			System.out.println(e.getMessage());
+			isSuccess = false;
+		}
+		return isSuccess;
+	}
 
 	protected void closeDB() {
 		try {
