@@ -83,6 +83,7 @@ public class GUI_Main extends JFrame {
 					if(j.getSelectedColumn()!=0) { //0열이 아닐때만 발생
 						System.out.println(model.data.get(j.getSelectedRow()).getPw()); //해당 열의 비밀번호 출력
 						StringSelection strSel = new StringSelection(model.data.get(j.getSelectedRow()).getPw()); //비밀번호 복사
+						JOptionPane.showMessageDialog(null, model.data.get(j.getSelectedRow()).getPw() + " 복사완료", "알림",JOptionPane.INFORMATION_MESSAGE,null);
 						clipboard.setContents(strSel, null);//복사한 비밀번호 클립보드에 넣기
 						}
 					}
