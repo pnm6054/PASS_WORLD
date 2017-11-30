@@ -24,10 +24,12 @@ import java.awt.Dimension;
 public class Login extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JPasswordField passwordField;
-	private JPasswordField passwordField_1;
+	private JTextField field_SN = new JTextField();
+	private JTextArea field_KW = new JTextArea();
+	private JTextField field_ID = new JTextField();
+	private JPasswordField field_PW = new JPasswordField();
+	private JPasswordField field_re_PW = new JPasswordField();
+	private JTextField field_mkdate = new JTextField();
 	DBtest2 db = new DBtest2();
 	/**
 	 * Launch the application.
@@ -69,7 +71,7 @@ public class Login extends JFrame {
 		Sitename.setFont(new Font("굴림", Font.PLAIN, 17));
 		Sitename.setHorizontalAlignment(JLabel.RIGHT);
 		
-		JTextField field_SN = new JTextField();
+		JTextField field_SN = this.field_SN;
 		field_SN.setBounds(175, 51, 154, 21);
 		field_SN.setColumns(10);
 		
@@ -93,7 +95,7 @@ public class Login extends JFrame {
 		ID.setBounds(65, 130, 100, 20);
 		ID.setHorizontalAlignment(JLabel.RIGHT);
 		
-		JTextField field_ID = new JTextField();
+		JTextField field_ID = this.field_ID;
 		field_ID.setBounds(175, 130, 154, 21);
 		field_ID.setColumns(10);
 		
@@ -102,7 +104,7 @@ public class Login extends JFrame {
 		PW.setBounds(65, 160, 100, 20);
 		PW.setHorizontalAlignment(JLabel.RIGHT);
 		
-		JPasswordField field_PW = new JPasswordField();
+		JPasswordField field_PW = this.field_PW;
 		field_PW.setBounds(175, 160, 154, 21);
 		
 		JTextArea safetycheck = new JTextArea("naer");
@@ -120,7 +122,7 @@ public class Login extends JFrame {
 		re_PW.setBounds(65, 240, 100, 20);
 		re_PW.setHorizontalAlignment(JLabel.RIGHT);
 
-		JPasswordField field_re_PW = new JPasswordField();
+		JPasswordField field_re_PW = this.field_re_PW;
 		field_re_PW.setBounds(175, 242, 154, 22);
 		
 		JLabel pw_eq = new JLabel("비번틀림");
@@ -133,7 +135,7 @@ public class Login extends JFrame {
 		makedate.setBounds(65, 300, 100, 20);
 		makedate.setHorizontalAlignment(JLabel.RIGHT);
 		
-		JTextField field_mkdate = new JTextField();
+		JTextField field_mkdate = this.field_mkdate;
 		field_mkdate.setBounds(175, 300, 154, 21);
 		field_mkdate.setColumns(10);
 		
@@ -172,5 +174,13 @@ public class Login extends JFrame {
 		
 		contentPane.add(btnAfd);
 		contentPane.add(btnGhkrdls);
+	}
+	public void prepareUpdate(acdata data) {
+		this.field_SN = new JTextField(data.getSiteid());
+		this.field_KW = new JTextArea(data.getKeyword());
+		this.field_ID = new JTextField(data.getId());
+		this.field_PW = new JPasswordField(data.getPw());
+		this.field_re_PW = new JPasswordField(data.getPw());
+		this.field_mkdate = new JTextField(data.getMadedate());
 	}
 }

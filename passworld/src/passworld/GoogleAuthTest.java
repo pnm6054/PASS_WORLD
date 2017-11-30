@@ -38,6 +38,7 @@ import com.warrenstrange.googleauth.GoogleAuthenticatorQRGenerator;
 import com.warrenstrange.googleauth.KeyRepresentation;
 
 import java.math.BigInteger;
+import java.sql.*;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -58,19 +59,27 @@ import java.util.concurrent.TimeUnit;
  * </li>
  * </ol>
  */
+
 public class GoogleAuthTest
 {
 
     // Change this to the saved secret from the running the above test.
 
-    private static final String SECRET_KEY = "2QV45ZM5LWEEBO6M";
+	/**
+	 * @param SECRET_KEY 
+	 * @param VALIDATION_CODE
+	 * @param username
+	 */
+    private static String SECRET_KEY = "2QV45ZM5LWEEBO6L";
     private static int VALIDATION_CODE = 911556;
-
-
+    private static String username = "Default";
+    DBtest2 db = new DBtest2();
+    
     public GoogleAuthTest() {
+    	loadInfo();
     	setupMockCredentialRepository();
     }
-    
+   
     public static void setupMockCredentialRepository()
     {
         System.setProperty(
@@ -119,17 +128,18 @@ public class GoogleAuthTest
         System.out.println("Base64-encoded secret key is " + secret);
     }
     
-    public static void createCredentialsForUser()
+    public static void createCredentialsForUser(String name, String email)
     {
         GoogleAuthenticator googleAuthenticator = new GoogleAuthenticator();
 
         final GoogleAuthenticatorKey key =
-                googleAuthenticator.createCredentials("PASS WORLD");
+                googleAuthenticator.createCredentials(name);
         final String SECRET_KEY = key.getKey();
         //final List<Integer> scratchCodes = key.getScratchCodes();
 
-        String otpAuthURL = GoogleAuthenticatorQRGenerator.getOtpAuthURL("PASS WORLD", "test@prova.org", key);
+        String otpAuthURL = GoogleAuthenticatorQRGenerator.getOtpAuthURL(name, email, key);
 
+        registerInfo(name,SECRET_KEY);
         System.out.println("Please register (otpauth uri): " + otpAuthURL);
         System.out.println("Secret key is " + SECRET_KEY);
     }
@@ -156,11 +166,55 @@ public class GoogleAuthTest
                         .setWindowSize(5)
                         .setCodeDigits(6);
         GoogleAuthenticator ga = new GoogleAuthenticator(gacb.build());
-        boolean isCodeValid = ga.authorizeUser("PASS WORLD", Integer.parseInt(VALIDATION_CODE));
+        boolean isCodeValid = ga.authorizeUser(username, Integer.parseInt(VALIDATION_CODE));
 
         System.out.println("Check VALIDATION_CODE = " + isCodeValid);
         
         return isCodeValid;
     }
-
+    
+    /** connect to db for loading Information to login
+     * 
+     * @param
+     */
+    private void loadInfo() {
+    	Connection conn = null;
+    	Statement stat = null;
+    	ResultSet rs = null;
+		try {
+			// db parameters
+			String url = "jdbc:sqlite:ext/main.db";
+			// create a connection to the database
+			conn = DriverManager.getConnection(url);
+			            
+			System.out.println("Connection to SQLite has been established.");
+			
+			stat = conn.createStatement();
+			rs = stat.executeQuery("select * from Google_Auth");
+			username = rs.getString("username");
+			SECRET_KEY = rs.getString("secretcode");
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    private static void registerInfo(String username, String secretcode) {
+    	Connection conn = null;
+    	PreparedStatement pstat = null;
+    	int result = 0;
+		try {
+			// db parameters
+			String url = "jdbc:sqlite:ext/main.db";
+			// create a connection to the database
+			conn = DriverManager.getConnection(url);
+			            
+			System.out.println("Connection to SQLite has been established.");
+			
+			pstat = conn.prepareStatement("update Google_Auth set secretcode = ?, username = ? where rowid = 1");
+			pstat.setString(1, secretcode);
+			pstat.setString(2, username);
+			result = pstat.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("계정 등록 에러" + e.getMessage());
+        }
+    }
 }
