@@ -9,6 +9,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -47,6 +49,7 @@ public class Register extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		GoogleAuthTest OTP = new GoogleAuthTest();
 		setTitle("PASS WORLD");
 		setIconImage(Toolkit.getDefaultToolkit().getImage("src/1.png"));
 		
@@ -71,8 +74,14 @@ public class Register extends JFrame {
 		JButton btnEmdfhr = new JButton("µî·Ï");
 		btnEmdfhr.setBackground(new Color(255,139,139));
 		btnEmdfhr.setBounds(160, 146, 97, 23);
-		contentPane.add(btnEmdfhr);
 		
+		btnEmdfhr.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				GoogleAuthTest.createCredentialsForUser(textField.getText(),textField_1.getText());
+			}
+		});
+		
+		contentPane.add(btnEmdfhr);
 		JLabel label_2 = new JLabel("Secret code");
 		label_2.setFont(new Font("±¼¸²", Font.PLAIN, 17));
 		label_2.setBounds(58, 199, 95, 27);

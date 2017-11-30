@@ -44,7 +44,6 @@ public class First extends JFrame {
 	public First() {
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		OTP = new GoogleAuthTest();
 		setIconImage(Toolkit.getDefaultToolkit().getImage("src/1.png"));
 		setTitle("PASS WORLD");
 		contentPane = new JPanel();
@@ -81,6 +80,7 @@ public class First extends JFrame {
 		getContentPane().add(button);
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				Register.main(null);
 			}
 		});
 
@@ -91,6 +91,7 @@ public class First extends JFrame {
 
 	public void isLoginCheck() {
 		//GoogleAuthTest.setupMockCredentialRepository();
+		OTP = new GoogleAuthTest();
 		if (OTP.authoriseUser(passwordField.getText())) {
 			JOptionPane.showMessageDialog(null, "Success");
 			bLoginCheck = true;
