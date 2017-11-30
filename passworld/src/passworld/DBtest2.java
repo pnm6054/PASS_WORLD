@@ -4,6 +4,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Vector;
 
+import javax.swing.JOptionPane;
+
 /**
  * connect to ext/main.db schema of main.db's table 'Main'
  * <p/>
@@ -155,6 +157,10 @@ public class DBtest2 {
 		} catch (SQLException e) {
 			System.err.println("Error : Insert Account\n");
 			System.out.println(e.getMessage());
+			if(e.getMessage().contains("UNIQUE")) //무결성 에러 발생시 출력하는 메세지
+			{
+				JOptionPane.showMessageDialog(null, "항목이 이미 등록되어 있습니다.");
+			}
 			isSuccess = false;
 		}
 		return isSuccess;
@@ -179,16 +185,17 @@ public class DBtest2 {
 		return isSuccess;
 	}
 	
-	protected boolean updateAccount(acdata data) {
+	protected boolean updateAccount(String siteid, String keyword, String id, String pw, int index) {
 		boolean isSuccess = true;
-		String sql = "update from Main set siteid = ?, keyword = ?, id = ?, pw = ?, makedate = currentdate where rowid = ?";
+		String sql = "update Main set siteid = ?, keyword = ?, id = ?, pw = ?, makedate = current_date where rowid = ?";
 		try {
+			System.out.println(sql);
 			stmt = conn.prepareStatement(sql);
-			stmt.setString(1, data.getId());
-			stmt.setString(2, data.getKeyword());
-			stmt.setString(3, data.getId());
-			stmt.setString(4, data.getPw());
-			stmt.setInt(5,data.getIndex());
+			stmt.setString(1, siteid);
+			stmt.setString(2, keyword);
+			stmt.setString(3, id);
+			stmt.setString(4, pw);
+			stmt.setInt(5, index);
 			stmt.executeUpdate();
 		}catch(SQLException e) {
 			System.err.println("Error : Can't update\n");

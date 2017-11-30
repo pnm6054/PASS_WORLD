@@ -14,7 +14,6 @@ public class GUI_Main extends JFrame {
 	DBtest2 db = new DBtest2();
 	PageTableModel model;
 	JTable result_table;
-	Login lg = new Login();
 	Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 
 
@@ -83,7 +82,7 @@ public class GUI_Main extends JFrame {
 					if(j.getSelectedColumn()!=0) { //0열이 아닐때만 발생
 						System.out.println(model.data.get(j.getSelectedRow()).getPw()); //해당 열의 비밀번호 출력
 						StringSelection strSel = new StringSelection(model.data.get(j.getSelectedRow()).getPw()); //비밀번호 복사
-						JOptionPane.showMessageDialog(null, model.data.get(j.getSelectedRow()).getPw() + " 복사완료", "알림",JOptionPane.INFORMATION_MESSAGE,null);
+						JOptionPane.showMessageDialog(null, model.data.get(j.getSelectedRow()).getPw() + " 복사완료", "알림",JOptionPane.INFORMATION_MESSAGE,null); //비밀번호 복사 메세지
 						clipboard.setContents(strSel, null);//복사한 비밀번호 클립보드에 넣기
 						}
 					}
@@ -133,7 +132,8 @@ public class GUI_Main extends JFrame {
 		registration.setPreferredSize(new Dimension(80, 27));
 		registration.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Login.main(null);
+				Login lg = new Login();
+				lg.setVisible(true);
 			}
 		});
 		
@@ -144,15 +144,39 @@ public class GUI_Main extends JFrame {
 		// Color.BLACK));
 		modification.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int i = 0;
-				while( i<db.result.size()) {
+				int i = 0; //while문의 반복을 위한 변수
+				int j = 0; //선택된 항목의 개수를 저장
+				int k = 0; //while문의 작동 중 선택된 항목의 번호를 저장
+				while( i<db.result.size()) { //선택된 항목의 개수를 반환
 					if(db.result.get(i).isSelected==true) {
-						System.out.println(db.result.get(i).getIndex());
-						db.search(db.result.get(i).getIndex());
-						Login.main(null);
-						lg.prepareUpdate(db.tmpdata);
+						k=i;
+						j++;
 					}
-				System.out.println(db.result.get(i).getIndex() + " "+ db.result.get(i).isSelected +" "+ db.result.get(i++).getSiteid());
+					System.out.println(db.result.get(i).getIndex() + " "+ db.result.get(i).isSelected +" "+ db.result.get(i++).getSiteid());
+				}
+				switch( j ) //1개의 항목이 선택되었을 때만 실행되게 한다.
+				{
+					case 0:
+						JOptionPane.showMessageDialog(null, "선택된 항목이 없습니다.");
+					break;
+					
+					case 1:
+						
+						//DefaultTableModel에서 선택한 컬럼의 값들을 가져오기
+						
+						System.out.println("nono" + k);
+						Login modif = new Login(db.result.get(k));
+						modif.setVisible(true);
+						//db.search(db.result.get(k).getIndex());
+						//다이얼로그 띄우기
+						//MemberDialog memberDialog = new MemberDialog(id, name, age, addr);
+						//memberDialog.jDialog.setModal(true);
+						//memberDialog.jDialog.setVisible(true);
+					break;
+					
+					default:
+						JOptionPane.showMessageDialog(null, "하나의 컬럼만 선택해주세요.");
+					break;
 				}
 				
 			}

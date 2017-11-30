@@ -30,10 +30,11 @@ public class Login extends JFrame {
 	private JPasswordField field_PW = new JPasswordField();
 	private JPasswordField field_re_PW = new JPasswordField();
 	private JTextField field_mkdate = new JTextField();
+	private JButton btnsubmit = new JButton("확인");
 	DBtest2 db = new DBtest2();
 	/**
 	 * Launch the application.
-	 */
+	 *//*
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -45,7 +46,7 @@ public class Login extends JFrame {
 				}
 			}
 		});
-	}
+	}*/
 
 	/**
 	 * Create the frame.
@@ -71,7 +72,7 @@ public class Login extends JFrame {
 		Sitename.setFont(new Font("굴림", Font.PLAIN, 17));
 		Sitename.setHorizontalAlignment(JLabel.RIGHT);
 		
-		JTextField field_SN = this.field_SN;
+		field_SN = new JTextField();
 		field_SN.setBounds(175, 51, 154, 21);
 		field_SN.setColumns(10);
 		
@@ -80,7 +81,7 @@ public class Login extends JFrame {
 		Keyword.setBounds(65, 80, 100, 20);
 		Keyword.setHorizontalAlignment(JLabel.RIGHT);
 		
-		JTextArea field_KW = new JTextArea(1,1);
+		field_KW = new JTextArea(1,1);
 		field_KW.setBounds(175, 80, 154, 40);
 		field_KW.setCaretPosition(field_KW.getText().length());
 		field_KW.setLineWrap(true);
@@ -95,7 +96,7 @@ public class Login extends JFrame {
 		ID.setBounds(65, 130, 100, 20);
 		ID.setHorizontalAlignment(JLabel.RIGHT);
 		
-		JTextField field_ID = this.field_ID;
+		field_ID = new JTextField();
 		field_ID.setBounds(175, 130, 154, 21);
 		field_ID.setColumns(10);
 		
@@ -104,7 +105,7 @@ public class Login extends JFrame {
 		PW.setBounds(65, 160, 100, 20);
 		PW.setHorizontalAlignment(JLabel.RIGHT);
 		
-		JPasswordField field_PW = this.field_PW;
+		field_PW = new JPasswordField();
 		field_PW.setBounds(175, 160, 154, 21);
 		
 		JTextArea safetycheck = new JTextArea("naer");
@@ -122,7 +123,7 @@ public class Login extends JFrame {
 		re_PW.setBounds(65, 240, 100, 20);
 		re_PW.setHorizontalAlignment(JLabel.RIGHT);
 
-		JPasswordField field_re_PW = this.field_re_PW;
+		field_re_PW = new JPasswordField();
 		field_re_PW.setBounds(175, 242, 154, 22);
 		
 		JLabel pw_eq = new JLabel("비번틀림");
@@ -135,14 +136,14 @@ public class Login extends JFrame {
 		makedate.setBounds(65, 300, 100, 20);
 		makedate.setHorizontalAlignment(JLabel.RIGHT);
 		
-		JTextField field_mkdate = this.field_mkdate;
+		field_mkdate = new JTextField();
 		field_mkdate.setBounds(175, 300, 154, 21);
 		field_mkdate.setColumns(10);
 		
-		JButton btnAfd = new JButton("확인");
-		btnAfd.setBackground(new Color(255,139,139));
-		btnAfd.setBounds(105, 380, 100, 30);
-		btnAfd.addActionListener(new ActionListener() {
+		btnsubmit = new JButton("확인");
+		btnsubmit.setBackground(new Color(255,139,139));
+		btnsubmit.setBounds(105, 380, 100, 30);
+		btnsubmit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				db.insertAccount(field_SN.getText(), field_KW.getText(), field_ID.getText(), field_PW.getText(), field_mkdate.getText());
 			}
@@ -172,15 +173,28 @@ public class Login extends JFrame {
 		contentPane.add(field_mkdate);
 		contentPane.add(pw_eq);
 		
-		contentPane.add(btnAfd);
+		contentPane.add(btnsubmit);
 		contentPane.add(btnGhkrdls);
 	}
-	public void prepareUpdate(acdata data) {
-		this.field_SN = new JTextField(data.getSiteid());
-		this.field_KW = new JTextArea(data.getKeyword());
-		this.field_ID = new JTextField(data.getId());
-		this.field_PW = new JPasswordField(data.getPw());
-		this.field_re_PW = new JPasswordField(data.getPw());
-		this.field_mkdate = new JTextField(data.getMadedate());
+	public Login(acdata data) {
+		this();
+		field_SN.setText(data.getSiteid());
+		field_KW.setText(data.getKeyword());
+		field_ID.setText(data.getId());
+		field_PW.setText(data.getPw());
+		field_re_PW.setText(data.getPw());
+		field_mkdate.setText(data.getMadedate());
+		contentPane.remove(btnsubmit);
+		btnsubmit = new JButton("수정");
+		btnsubmit.setBackground(new Color(255,139,139));
+		btnsubmit.setBounds(105, 380, 100, 30);
+		btnsubmit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(db.updateAccount(field_SN.getText(), field_KW.getText(), field_ID.getText(), field_PW.getText(), data.getIndex())) {
+					dispose();
+				}
+			}
+		});
+		contentPane.add(btnsubmit);
 	}
 }
