@@ -1,17 +1,9 @@
 package passworld;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.*;
+import java.awt.datatransfer.*;
+import java.awt.event.*;
 import java.util.ArrayList;
-import java.util.Vector;
-
 import javax.swing.*;
 import javax.swing.table.*;
 
@@ -23,6 +15,8 @@ public class GUI_Main extends JFrame {
 	PageTableModel model;
 	JTable result_table;
 	Login lg = new Login();
+	Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+
 
 	public GUI_Main()  {
 		super("PASS WORLD");
@@ -83,8 +77,15 @@ public class GUI_Main extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				// 이벤트가 일어난 객체 얻기
 				JTable j = (JTable) e.getComponent();
-				// 체크박를 클릭할때만 값을 얻어 저장
+				// 체크박스를 클릭할때만 값을 얻어 저장
 				if(j.getSelectedColumn()==0) model.data.get(j.getSelectedRow()).isSelected=!model.data.get(j.getSelectedRow()).isSelected;
+				if(e.getClickCount() == 2) { //더블클릭시 발생 이벤트
+					if(j.getSelectedColumn()!=0) { //0열이 아닐때만 발생
+						System.out.println(model.data.get(j.getSelectedRow()).getPw()); //해당 열의 비밀번호 출력
+						StringSelection strSel = new StringSelection(model.data.get(j.getSelectedRow()).getPw()); //비밀번호 복사
+						clipboard.setContents(strSel, null);//복사한 비밀번호 클립보드에 넣기
+						}
+					}
 			}
 			public void mouseEntered(MouseEvent e) {}
 			public void mouseExited(MouseEvent e) {}

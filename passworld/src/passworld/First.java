@@ -80,7 +80,9 @@ public class First extends JFrame {
 		getContentPane().add(button);
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Register.main(null);
+				int result = JOptionPane.showConfirmDialog(null, "계속 하시겠습니까? \n기등록된 OTP정보는 사라집니다.","경고",JOptionPane.YES_NO_OPTION);
+				if(result==JOptionPane.YES_OPTION)
+					Register.main(null);
 			}
 		});
 
@@ -115,30 +117,6 @@ public class First extends JFrame {
 
 	public boolean isLogin() {
 		return bLoginCheck;
-	}
-
-}
-
-class login_Field extends JPanel {
-	public login_Field() {
-
-		setBackground(Color.WHITE);
-
-		JButton btnLogin = new JButton("Login");
-		btnLogin.setBackground(new Color(255, 139, 139));
-		btnLogin.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-		btnLogin.setFont(new Font("굴림", Font.PLAIN, 16));
-		btnLogin.setBounds(269, 61, 75, 26);
-		add(btnLogin);
-
-		JLabel lblCode = new JLabel("code");
-		lblCode.setFont(new Font("굴림", Font.PLAIN, 21));
-		lblCode.setBounds(46, 59, 61, 24);
-		// lblCode.setBorder(new EmptyBorder(5, 5, 5, 5));
-		add(lblCode);
 	}
 
 }

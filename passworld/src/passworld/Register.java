@@ -42,7 +42,7 @@ public class Register extends JFrame {
 	 * Create the frame.
 	 */
 	public Register() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 428, 642);
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.WHITE);
