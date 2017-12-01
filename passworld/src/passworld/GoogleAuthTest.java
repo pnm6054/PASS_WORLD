@@ -30,12 +30,9 @@
 
 package passworld;
 
-import com.warrenstrange.googleauth.CredentialRepositoryMock;
-import com.warrenstrange.googleauth.GoogleAuthenticator;
+import com.warrenstrange.googleauth.*;
 import com.warrenstrange.googleauth.GoogleAuthenticatorConfig.GoogleAuthenticatorConfigBuilder;
-import com.warrenstrange.googleauth.GoogleAuthenticatorKey;
-import com.warrenstrange.googleauth.GoogleAuthenticatorQRGenerator;
-import com.warrenstrange.googleauth.KeyRepresentation;
+
 
 import java.math.BigInteger;
 import java.sql.*;
