@@ -153,6 +153,7 @@ public class GUI_Main extends JFrame {
 						j++;
 					}
 					System.out.println(db.result.get(i).getIndex() + " "+ db.result.get(i).isSelected +" "+ db.result.get(i++).getSiteid());
+					//이거 없으면 무한루프 생기는 듯 (수정필요)
 				}
 				switch( j ) //1개의 항목이 선택되었을 때만 실행되게 한다.
 				{
@@ -164,7 +165,7 @@ public class GUI_Main extends JFrame {
 						
 						//DefaultTableModel에서 선택한 컬럼의 값들을 가져오기
 						
-						System.out.println("nono" + k);
+						System.out.println(k);
 						Login modif = new Login(db.result.get(k));
 						modif.setVisible(true);
 						//db.search(db.result.get(k).getIndex());
@@ -370,6 +371,3 @@ public class GUI_Main extends JFrame {
 	}
 
 }
-
-
-
