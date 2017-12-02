@@ -127,5 +127,4 @@ public class First extends JFrame {
 	public boolean isLogin() {
 		return bLoginCheck;
 	}
-
 }
