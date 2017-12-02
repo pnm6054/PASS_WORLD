@@ -20,7 +20,9 @@ import java.awt.Color;
 public class Register extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField textField_2;
+	private JTextField secret_field;
+	private JTextField name_Field;
+	private JTextField account_Field;
 
 	/**
 	 * Launch the application.
@@ -53,49 +55,49 @@ public class Register extends JFrame {
 		setTitle("PASS WORLD");
 		setIconImage(Toolkit.getDefaultToolkit().getImage("src/1.png"));
 		
-		JLabel label = new JLabel("ÀÌ¸§");
-		label.setFont(new Font("±¼¸²", Font.PLAIN, 17));
-		label.setBounds(110, 50, 50, 27);
-		contentPane.add(label);
+		JLabel name = new JLabel("ÀÌ¸§");
+		name.setFont(new Font("±¼¸²", Font.PLAIN, 17));
+		name.setBounds(110, 50, 50, 27);
+		contentPane.add(name);
 		
-		JLabel label_1 = new JLabel("°èÁ¤¸í");
-		label_1.setFont(new Font("±¼¸²", Font.PLAIN, 17));
-		label_1.setBounds(103, 87, 50, 27);
-		contentPane.add(label_1);
+		JLabel account = new JLabel("°èÁ¤¸í");
+		account.setFont(new Font("±¼¸²", Font.PLAIN, 17));
+		account.setBounds(103, 87, 50, 27);
+		contentPane.add(account);
 		
-		JTextField textField = new JTextField();
-		textField.setBounds(160, 53, 107, 24);
-		contentPane.add(textField);
+		name_Field = new JTextField();
+		name_Field.setBounds(160, 53, 107, 24);
+		contentPane.add(name_Field);
 		
-		JTextField textField_1 = new JTextField();
-		textField_1.setBounds(160, 90, 178, 24);
-		contentPane.add(textField_1);
+		account_Field = new JTextField();
+		account_Field.setBounds(160, 90, 178, 24);
+		contentPane.add(account_Field);
 		
-		JButton btnEmdfhr = new JButton("µî·Ï");
-		btnEmdfhr.setBackground(new Color(255,139,139));
-		btnEmdfhr.setBounds(160, 146, 97, 23);
+		JButton btnregister = new JButton("µî·Ï");
+		btnregister.setBackground(new Color(255,139,139));
+		btnregister.setBounds(160, 146, 97, 23);
 		
-		btnEmdfhr.addActionListener(new ActionListener() {
+		btnregister.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				GoogleAuthTest.createCredentialsForUser(textField.getText(),textField_1.getText());
+				secret_field.setText(GoogleAuthTest.createCredentialsForUser(name_Field.getText(),account_Field.getText()));
 			}
 		});
+		contentPane.add(btnregister);
 		
-		contentPane.add(btnEmdfhr);
-		JLabel label_2 = new JLabel("Secret code");
-		label_2.setFont(new Font("±¼¸²", Font.PLAIN, 17));
-		label_2.setBounds(58, 199, 95, 27);
-		contentPane.add(label_2);
+		JLabel secretcode = new JLabel("Secret code");
+		secretcode.setFont(new Font("±¼¸²", Font.PLAIN, 17));
+		secretcode.setBounds(58, 199, 95, 27);
+		contentPane.add(secretcode);
 		
-		textField_2 = new JTextField();
-		textField_2.setBounds(160, 202, 178, 24);
-		contentPane.add(textField_2);
-		textField_2.setColumns(10);
+		secret_field = new JTextField();
+		secret_field.setBounds(160, 202, 178, 24);
+		secret_field.setColumns(10);
+		contentPane.add(secret_field);
 		
-		JLabel label_3 = new JLabel("* Goolge Authentiator »ç¿ë¹ý");
-		label_3.setForeground(Color.RED);
-		label_3.setFont(new Font("±¼¸²", Font.PLAIN, 17));
-		label_3.setBounds(58, 256, 247, 15);
-		contentPane.add(label_3);
+		JLabel manual = new JLabel("* Goolge Authentiator »ç¿ë¹ý");
+		manual.setForeground(Color.RED);
+		manual.setFont(new Font("±¼¸²", Font.PLAIN, 17));
+		manual.setBounds(58, 256, 247, 15);
+		contentPane.add(manual);
 	}
 }

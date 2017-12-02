@@ -107,7 +107,7 @@ public class GoogleAuthTest
     	System.out.println(VALIDATION_CODE);
     }*/
     
-    public static void createCredentialsForUser(String name, String email)
+    public static String createCredentialsForUser(String name, String email)
     {
         GoogleAuthenticator googleAuthenticator = new GoogleAuthenticator();
 
@@ -121,6 +121,7 @@ public class GoogleAuthTest
         registerInfo(name,SECRET_KEY);
         System.out.println("Please register (otpauth uri): " + otpAuthURL);
         System.out.println("Secret key is " + SECRET_KEY);
+		return SECRET_KEY;
     }
 
     public static boolean authoriseUser(String VALIDATION_CODE)
@@ -162,7 +163,7 @@ public class GoogleAuthTest
             System.out.println(e.getMessage());
         }
     }
-    private static void registerInfo(String username, String secretcode) {
+    private static String registerInfo(String username, String secretcode) {
     	Connection conn = null;
     	PreparedStatement pstat = null;
     	int result = 0;
@@ -181,5 +182,6 @@ public class GoogleAuthTest
         } catch (SQLException e) {
             System.out.println("계정 등록 에러" + e.getMessage());
         }
+		return secretcode;
     }
 }
