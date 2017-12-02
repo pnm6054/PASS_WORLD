@@ -79,7 +79,7 @@ public class Register extends JFrame {
 		
 		btnregister.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				secret_field.setText(GoogleAuthTest.createCredentialsForUser(name_Field.getText(),account_Field.getText()));
+				secret_field.setText(GoogleAuthTest.createCredentialsForUser(name_Field.getText(),account_Field.getText())); //secretcode 텍스트 필드에 생성된 secret code 출력
 			}
 		});
 		contentPane.add(btnregister);

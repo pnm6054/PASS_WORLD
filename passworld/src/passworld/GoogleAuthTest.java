@@ -33,13 +33,19 @@ package passworld;
 import com.warrenstrange.googleauth.*;
 import com.warrenstrange.googleauth.GoogleAuthenticatorConfig.GoogleAuthenticatorConfigBuilder;
 
-
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Image;
+import java.awt.MediaTracker;
+import java.awt.Toolkit;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.math.BigInteger;
 import java.sql.*;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-
+import javax.swing.*;
 /**
  * Not really a unit test, but it shows the basic usage of this package.
  * To properly test the authenticator, manual intervention and multiple steps
@@ -121,7 +127,17 @@ public class GoogleAuthTest
         registerInfo(name,SECRET_KEY);
         System.out.println("Please register (otpauth uri): " + otpAuthURL);
         System.out.println("Secret key is " + SECRET_KEY);
-		return SECRET_KEY;
+		
+        /** pop up the QR Code when registration button clicked
+         *  QR code download from internet and deposit in ext folder 
+         * @author 
+         */
+        
+        /*            *인터넷에서 이미지를 가져와서 저장하는 방법*
+         *    http://blog.naver.com/gntvnt1/221042266094
+         */        
+        new QR(); //QR코드 창 출력
+        return SECRET_KEY;
     }
 
     public static boolean authoriseUser(String VALIDATION_CODE)
@@ -184,4 +200,26 @@ public class GoogleAuthTest
         }
 		return secretcode;
     }
+}
+
+class QR extends JDialog implements MouseListener{
+	protected QR() {
+		this.setTitle("클릭하면 닫힘"); 
+		ImageIcon i = new ImageIcon("ext/chart.jpg");
+		JLabel lb = new JLabel(i); //이미지라벨 생성
+		lb.setVisible(true);
+		add(lb);
+
+		Dimension d = getToolkit().getScreenSize(); //화면 크기 측정
+		this.setSize(215,240); 
+		setLocation(d.width / 2 - getWidth() / 2, d.height / 2 - getHeight() / 2); //정중앙에 생성
+		this.setVisible(true); 
+		this.setResizable(false); //크기조절 불가
+		addMouseListener(this); //클릭시 닫히는 액션
+	}
+	public void mouseClicked(MouseEvent arg0) {super.dispose();}
+	public void mouseEntered(MouseEvent e) {}
+	public void mouseExited(MouseEvent e) {}
+	public void mousePressed(MouseEvent e) {}
+	public void mouseReleased(MouseEvent e) {}
 }
