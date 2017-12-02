@@ -30,12 +30,9 @@
 
 package passworld;
 
-import com.warrenstrange.googleauth.CredentialRepositoryMock;
-import com.warrenstrange.googleauth.GoogleAuthenticator;
+import com.warrenstrange.googleauth.*;
 import com.warrenstrange.googleauth.GoogleAuthenticatorConfig.GoogleAuthenticatorConfigBuilder;
-import com.warrenstrange.googleauth.GoogleAuthenticatorKey;
-import com.warrenstrange.googleauth.GoogleAuthenticatorQRGenerator;
-import com.warrenstrange.googleauth.KeyRepresentation;
+
 
 import java.math.BigInteger;
 import java.sql.*;
@@ -109,24 +106,6 @@ public class GoogleAuthTest
 
     	System.out.println(VALIDATION_CODE);
     }*/
-
-    public void createCredentials()
-    {
-        GoogleAuthenticatorConfigBuilder gacb =
-                new GoogleAuthenticatorConfigBuilder()
-                        .setKeyRepresentation(KeyRepresentation.BASE64);
-        GoogleAuthenticator googleAuthenticator = new GoogleAuthenticator(gacb.build());
-
-        final GoogleAuthenticatorKey key =
-                googleAuthenticator.createCredentials();
-        final String secret = key.getKey();
-        final List<Integer> scratchCodes = key.getScratchCodes();
-
-        String otpAuthURL = GoogleAuthenticatorQRGenerator.getOtpAuthURL("PASS WORLD", "test@prova.org", key);
-
-        System.out.println("Please register (otpauth uri): " + otpAuthURL);
-        System.out.println("Base64-encoded secret key is " + secret);
-    }
     
     public static void createCredentialsForUser(String name, String email)
     {
@@ -142,20 +121,6 @@ public class GoogleAuthTest
         registerInfo(name,SECRET_KEY);
         System.out.println("Please register (otpauth uri): " + otpAuthURL);
         System.out.println("Secret key is " + SECRET_KEY);
-    }
-
-
-    public void authorise()
-    {
-        GoogleAuthenticatorConfigBuilder gacb =
-                new GoogleAuthenticatorConfigBuilder()
-                        .setTimeStepSizeInMillis(TimeUnit.SECONDS.toMillis(30))
-                        .setWindowSize(5);
-        GoogleAuthenticator ga = new GoogleAuthenticator(gacb.build());
-
-        boolean isCodeValid = ga.authorize(SECRET_KEY, VALIDATION_CODE);
-
-        System.out.println("Check VALIDATION_CODE = " + isCodeValid);
     }
 
     public static boolean authoriseUser(String VALIDATION_CODE)

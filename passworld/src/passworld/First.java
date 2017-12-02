@@ -3,9 +3,7 @@ package passworld;
 import java.awt.BorderLayout;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
+import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
@@ -61,6 +59,17 @@ public class First extends JFrame {
 		passwordField = new JPasswordField();
 		passwordField.setBounds(101, 59, 156, 28);
 		contentPane.add(passwordField);
+		passwordField.addKeyListener(new KeyListener() {
+			public void keyPressed(KeyEvent e)
+			{
+			        // Enter키가 눌렸다면
+			        if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+			        	isLoginCheck();
+			        }
+			}
+			public void keyReleased(KeyEvent e) {}
+			public void keyTyped(KeyEvent e) {}
+		});
 
 		JButton btnLogin = new JButton("Login");
 		btnLogin.setBackground(new Color(255, 139, 139));
@@ -72,7 +81,7 @@ public class First extends JFrame {
 				isLoginCheck();
 			}
 		});
-
+		
 		JButton button = new JButton("회원등록");
 		button.setBackground(Color.WHITE);
 		button.setFont(new Font("굴림", Font.PLAIN, 17));
@@ -118,5 +127,4 @@ public class First extends JFrame {
 	public boolean isLogin() {
 		return bLoginCheck;
 	}
-
 }

@@ -38,6 +38,7 @@ public class DBtest2 {
 	ResultSet rs;
 	ArrayList<acdata> result = new ArrayList<acdata>();
 	acdata tmpdata = new acdata();
+	Aria aria = new Aria();
 
 	public DBtest2() {
 		connectDB();
@@ -96,7 +97,7 @@ public class DBtest2 {
 				data1.setSiteid(rs.getString("siteid"));
 				data1.setKeyword(rs.getString("keyword"));
 				data1.setId(rs.getString("id"));
-				data1.setPw(rs.getString("pw"));
+				data1.setPw(aria.Decrypt(rs.getString("pw")));
 				data1.setMadedate(rs.getString("makedate"));
 				data1.setcount(rs.getInt("count"));
 
@@ -126,7 +127,7 @@ public class DBtest2 {
 			tmpdata.setSiteid(rs.getString("siteid"));
 			tmpdata.setKeyword(rs.getString("keyword"));
 			tmpdata.setId(rs.getString("id"));
-			tmpdata.setPw(rs.getString("pw"));
+			tmpdata.setPw(aria.Decrypt(rs.getString("pw")));
 			tmpdata.setMadedate(rs.getString("makedate"));
 			tmpdata.setcount(rs.getInt("count"));
 
@@ -151,7 +152,7 @@ public class DBtest2 {
 			stmt.setString(1, siteid);
 			stmt.setString(2, keyword);
 			stmt.setString(3, id);
-			stmt.setString(4, pw);
+			stmt.setString(4, aria.Encrypt(pw));
 			stmt.setString(5, makedate);
 			stmt.executeUpdate();
 		} catch (SQLException e) {
@@ -194,7 +195,7 @@ public class DBtest2 {
 			stmt.setString(1, siteid);
 			stmt.setString(2, keyword);
 			stmt.setString(3, id);
-			stmt.setString(4, pw);
+			stmt.setString(4, aria.Encrypt(pw));
 			stmt.setInt(5, index);
 			stmt.executeUpdate();
 		}catch(SQLException e) {
