@@ -103,7 +103,23 @@ public class GUI_Main extends JFrame {
 		JTextField keyword_field = new JTextField("", 20);
 		keyword_field.setBounds(55, 44, 259, 24);
 		keyword_field.setColumns(10);
+		keyword_field.addKeyListener(new KeyListener() {
+			public void keyPressed(KeyEvent e)
+			{
+			        // Enter키가 눌렸다면
+			        if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+			        	System.out.println("pressed");
+			        	db.result.removeAll(db.result); // 남아있는 검색 결과를 초기화
+						db.search(keyword_field.getText()); // 검색창에 입력된 텍스트를 search메소드로 전달하여 검색)
+						model.addAcInfo(db.result);// 검색된 결과를 table모델에 전달
+						model.fireTableDataChanged();// 화면 상에 보이는 표를 업데이트
+			        }
+			}
+			public void keyReleased(KeyEvent e) {}
+			public void keyTyped(KeyEvent e) {}
+		});
 		search_field.add(keyword_field);
+
 
 		ImageIcon search = new ImageIcon("src/2.PNG");
 		JButton search_button = new JButton(search);

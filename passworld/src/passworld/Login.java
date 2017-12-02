@@ -9,9 +9,12 @@ import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
 import java.awt.Font;
+import java.awt.KeyboardFocusManager;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import javax.swing.JTextField;
 import javax.swing.JTextArea;
@@ -90,6 +93,17 @@ public class Login extends JFrame {
 		//Border emptyBorder = BorderFactory.createEmptyBorder(7, 7, 7, 7);
 		field_KW.setBorder(lineBorder);
 		field_KW.setEditable(true);
+		field_KW.addKeyListener(new KeyListener() {
+			public void keyPressed(KeyEvent e)
+			{
+			        // Enter≈∞∞° ¥≠∑»¥Ÿ∏È
+			        if(e.getKeyCode() == KeyEvent.VK_TAB) {
+			        	field_ID.requestFocus();
+			        }
+			}
+			public void keyReleased(KeyEvent e) {}
+			public void keyTyped(KeyEvent e) {}
+		});
 		
 		JLabel ID = new JLabel("ID");
 		ID.setFont(new Font("±º∏≤", Font.PLAIN, 17));
