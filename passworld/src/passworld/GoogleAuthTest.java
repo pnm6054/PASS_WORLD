@@ -83,7 +83,7 @@ public class GoogleAuthTest
                 CredentialRepositoryMock.MOCK_SECRET_KEY_NAME,
                 SECRET_KEY);
     }
-
+ 
     private static byte[] hexStr2Bytes(String hex)
     {
         // Adding one byte to get the right conversion
