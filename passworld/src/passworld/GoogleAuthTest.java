@@ -36,15 +36,20 @@ import com.warrenstrange.googleauth.GoogleAuthenticatorConfig.GoogleAuthenticato
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.math.BigInteger;
+import java.net.URL;
 import java.sql.*;
 import java.util.concurrent.TimeUnit;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 /**
  * Not really a unit test, but it shows the basic usage of this package.
@@ -136,7 +141,7 @@ public class GoogleAuthTest
         /*            *인터넷에서 이미지를 가져와서 저장하는 방법*
          *    http://blog.naver.com/gntvnt1/221042266094
          */        
-        new QR(); //QR코드 창 출력
+        new QRcode(otpAuthURL); //QR코드 창 출력
         return SECRET_KEY;
     }
 
@@ -179,7 +184,7 @@ public class GoogleAuthTest
             System.out.println(e.getMessage());
         }
     }
-    private static String registerInfo(String username, String secretcode) {
+    private static void registerInfo(String username, String secretcode) {
     	Connection conn = null;
     	PreparedStatement pstat = null;
     	int result = 0;
@@ -198,28 +203,51 @@ public class GoogleAuthTest
         } catch (SQLException e) {
             System.out.println("계정 등록 에러" + e.getMessage());
         }
-		return secretcode;
     }
 }
 
-class QR extends JDialog implements MouseListener{
-	protected QR() {
-		this.setTitle("클릭하면 닫힘"); 
-		ImageIcon i = new ImageIcon("ext/chart.jpg");
-		JLabel lb = new JLabel(i); //이미지라벨 생성
-		lb.setVisible(true);
-		add(lb);
-
-		Dimension d = getToolkit().getScreenSize(); //화면 크기 측정
-		this.setSize(215,240); 
-		setLocation(d.width / 2 - getWidth() / 2, d.height / 2 - getHeight() / 2); //정중앙에 생성
-		this.setVisible(true); 
-		this.setResizable(false); //크기조절 불가
-		addMouseListener(this); //클릭시 닫히는 액션
-	}
-	public void mouseClicked(MouseEvent arg0) {super.dispose();}
-	public void mouseEntered(MouseEvent e) {}
-	public void mouseExited(MouseEvent e) {}
-	public void mousePressed(MouseEvent e) {}
-	public void mouseReleased(MouseEvent e) {}
+class QRcode extends JDialog implements MouseListener{
+    BufferedImage img=null;// 버퍼(메모리)에 이미지를 올릴 때 쓰임
+	Dimension d = getToolkit().getScreenSize(); //화면 크기 측정
+	 //크기조절 불가
+	
+    public QRcode(String url){
+    	setTitle("클릭하면 닫힘"); 
+        setSize(215,240); 
+    	setLocation(d.width / 2 - getWidth() / 2, d.height / 2 - getHeight() / 2); //정중앙에 생성
+    	setResizable(false);
+        setVisible(true);
+        try {
+            img = ImageIO.read(new URL(url));// 윈도우에선 경로가 \라서 \\라고 입력해줘야 한다.
+        } catch (IOException e) {// ImageIO이것을 적으면 catch문으로 예외처리를 해야 한다. 예외처리를 하도록 클래스 설계자가 적어두어서 반드시 해줘야 한다.
+            // 입력과 출력이 rfid, 소켓통신, 윈도우, 임베디드 등등 입출력이 너무 다양하기 때문에..
+            e.printStackTrace();
+            System.out.println(e.getMessage());
+            System.out.println("에러 나셨습니다!!");// 일부러 없는 파일을 열어서 에러문을 출력해봐라, (이런 프린트문의 출력은 필요없다) 이 줄을 뺀것이 예외처리의 기본형태
+            System.exit(0);// 이 구문은 컴퓨터를 빠져 나와라는 것이다. 인자값 0의 의미는 0일땐 어떤게 실패, 1은 연결되었다 실패, 2는... 숫자로 의미를 부여할 수 있다.
+            // 아이폰은 예외처리를 표시도 안하고(공백, 오류나도 안알려줌), 윈도우는 블루스크린을 띄워라는 것이 담겨있다.
+        }
+        MyPanel1 panel = new MyPanel1();
+        add(panel);
+        pack();
+        addMouseListener(this);//클릭시 닫히는 액션
+    }
+    
+    class MyPanel1 extends JPanel{
+        public void paint(Graphics g){// 페인트 컴포넌트나 페인트나 같다.
+            g.drawImage(img, 0, 0, null);
+        }        
+        public Dimension getPreferredSize(){// 만약 오타등으로 오버라이드가 안되었다면 툴을 이용해 불러와라
+            if (img == null)
+                return new Dimension(300, 300);
+            else
+                return new Dimension(img.getWidth(null), img.getHeight(null));// 인자값이 (null)이나 ()이나 같다.
+        }
+    }
+    public void mouseClicked(MouseEvent arg0) {super.dispose();}
+    public void mouseEntered(MouseEvent e) {}
+    public void mouseExited(MouseEvent e) {}
+    public void mousePressed(MouseEvent e) {}
+    public void mouseReleased(MouseEvent e) {}
 }
+
