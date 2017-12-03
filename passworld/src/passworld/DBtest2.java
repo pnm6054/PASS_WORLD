@@ -30,11 +30,12 @@ import javax.swing.JOptionPane;
  * 
  * 
  * @author SJ.Kim
- * @version 0.0.1
+ * @version 0.1.1
  */
 public class DBtest2 {
 	Connection conn;
 	PreparedStatement stmt;
+	Statement smt;
 	ResultSet rs;
 	ArrayList<acdata> result = new ArrayList<acdata>();
 	acdata tmpdata = new acdata();
@@ -48,7 +49,7 @@ public class DBtest2 {
 		try {
 			String url = "jdbc:sqlite:ext/main.db";
 			conn = DriverManager.getConnection(url);
-
+			System.out.println("Connection to SQLite has been established.");
 		} catch (SQLException e) {
 			System.err.println("Error : DB Connect - Driver Manager");
 		}
@@ -206,6 +207,36 @@ public class DBtest2 {
 		return isSuccess;
 	}
 	
+	protected boolean registerInfo(String username, String secretcode) {
+		boolean isSuccess = true;
+		String sql = "update Google_Auth set secretcode = ?, username = ? where rowid = 1";
+		try {
+			System.out.println(sql);
+			stmt = conn.prepareStatement(sql);
+			stmt.setString(1, secretcode);
+			stmt.setString(2, username);
+			stmt.executeUpdate();
+		}catch(SQLException e) {
+			System.err.println("Error : Can't update otp info\n");
+			System.out.println(e.getMessage());
+			isSuccess = false;
+		}
+		return isSuccess;
+    }
+	
+	private void loadInfo(String username, String SECRET_KEY) {
+		boolean isSuccess = true;
+		String sql = "update Google_Auth set secretcode = ?, username = ? where rowid = 1";
+		try {
+			smt = conn.createStatement();
+			rs = smt.executeQuery("select * from Google_Auth");
+			username = rs.getString("username");
+			SECRET_KEY = rs.getString("secretcode");
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            isSuccess = false;
+        }
+    }
 
 	protected void closeDB() {
 		try {

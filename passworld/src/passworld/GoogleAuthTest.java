@@ -86,6 +86,7 @@ public class GoogleAuthTest
     public GoogleAuthTest() {
     	loadInfo();
     	setupMockCredentialRepository();
+    	
     }
    
     public static void setupMockCredentialRepository()
@@ -107,29 +108,17 @@ public class GoogleAuthTest
 
         return ret;
     }
-    /*public static void main(String[] args) {
-    	
-    	setupMockCredentialRepository();
-    	
-    	//createCredentialsForUser();
-    	System.out.println(SECRET_KEY);
-    	authoriseUser("201561");
-
-    	System.out.println(VALIDATION_CODE);
-    }*/
     
     public static String createCredentialsForUser(String name, String email)
     {
         GoogleAuthenticator googleAuthenticator = new GoogleAuthenticator();
-
+        DBtest2 db = new DBtest2();
         final GoogleAuthenticatorKey key =
                 googleAuthenticator.createCredentials(name);
         final String SECRET_KEY = key.getKey();
-        //final List<Integer> scratchCodes = key.getScratchCodes();
 
         String otpAuthURL = GoogleAuthenticatorQRGenerator.getOtpAuthURL(name, email, key);
-
-        registerInfo(name,SECRET_KEY);
+        db.registerInfo(name,SECRET_KEY);
         System.out.println("Please register (otpauth uri): " + otpAuthURL);
         System.out.println("Secret key is " + SECRET_KEY);
 		
@@ -137,11 +126,11 @@ public class GoogleAuthTest
          *  QR code download from internet and deposit in ext folder 
          * @author 
          */
-        
         /*            *인터넷에서 이미지를 가져와서 저장하는 방법*
          *    http://blog.naver.com/gntvnt1/221042266094
          */        
         new QRcode(otpAuthURL); //QR코드 창 출력
+        db.closeDB();
         return SECRET_KEY;
     }
 
@@ -184,38 +173,16 @@ public class GoogleAuthTest
             System.out.println(e.getMessage());
         }
     }
-    private static void registerInfo(String username, String secretcode) {
-    	Connection conn = null;
-    	PreparedStatement pstat = null;
-    	int result = 0;
-		try {
-			// db parameters
-			String url = "jdbc:sqlite:ext/main.db";
-			// create a connection to the database
-			conn = DriverManager.getConnection(url);
-			            
-			System.out.println("Connection to SQLite has been established.");
-			
-			pstat = conn.prepareStatement("update Google_Auth set secretcode = ?, username = ? where rowid = 1");
-			pstat.setString(1, secretcode);
-			pstat.setString(2, username);
-			result = pstat.executeUpdate();
-        } catch (SQLException e) {
-            System.out.println("계정 등록 에러" + e.getMessage());
-        }
-    }
 }
 
 class QRcode extends JDialog implements MouseListener{
     BufferedImage img=null;// 버퍼(메모리)에 이미지를 올릴 때 쓰임
 	Dimension d = getToolkit().getScreenSize(); //화면 크기 측정
-	 //크기조절 불가
-	
     public QRcode(String url){
     	setTitle("클릭하면 닫힘"); 
         setSize(215,240); 
     	setLocation(d.width / 2 - getWidth() / 2, d.height / 2 - getHeight() / 2); //정중앙에 생성
-    	setResizable(false);
+    	setResizable(false); //크기조절 불가
         setVisible(true);
         try {
             img = ImageIO.read(new URL(url));// 윈도우에선 경로가 \라서 \\라고 입력해줘야 한다.

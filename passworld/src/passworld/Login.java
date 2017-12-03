@@ -8,6 +8,8 @@ import javax.swing.JPanel;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import java.awt.KeyboardFocusManager;
 import java.awt.Toolkit;
@@ -159,7 +161,12 @@ public class Login extends JFrame {
 		btnsubmit.setBounds(105, 380, 100, 30);
 		btnsubmit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				db.insertAccount(field_SN.getText(), field_KW.getText(), field_ID.getText(), field_PW.getText(), field_mkdate.getText());
+				if(db.insertAccount(field_SN.getText(), field_KW.getText(), field_ID.getText(), field_PW.getText(), field_mkdate.getText())==true) {
+					JOptionPane.showMessageDialog(null, "등록성공");
+					dispose();
+				}else {
+					JOptionPane.showMessageDialog(null, "등록실패");
+				}
 			}
 		});
 		
@@ -198,6 +205,7 @@ public class Login extends JFrame {
 		field_PW.setText(data.getPw());
 		field_re_PW.setText(data.getPw());
 		field_mkdate.setText(data.getMadedate());
+	
 		contentPane.remove(btnsubmit);
 		btnsubmit = new JButton("수정");
 		btnsubmit.setBackground(new Color(255,139,139));

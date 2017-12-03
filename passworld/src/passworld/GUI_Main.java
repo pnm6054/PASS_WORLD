@@ -207,13 +207,16 @@ public class GUI_Main extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				//ArrayList<Integer> rowid_list = new ArrayList<Integer>();
 				int i = 0;
+				int j = 0;
 				while( i<db.result.size()) {
 					if(db.result.get(i).isSelected==true) {
+						j++;
 						System.out.println(db.result.get(i).getIndex());
 						db.deleteAccount(db.result.get(i).getIndex());
 					}
 				System.out.println(db.result.get(i).getIndex() + " "+ db.result.get(i).isSelected +" "+ db.result.get(i++).getSiteid());
 				}
+				JOptionPane.showMessageDialog(null, j + "개 항목 삭제");
 				System.out.println("-----------------");
 			}
 		});
@@ -229,34 +232,6 @@ public class GUI_Main extends JFrame {
 		frame.setVisible(true);
 		// return frame;
 	}
-
-	/*
-	 * class TableCell extends AbstractCellEditor implements TableCellEditor,
-	 * TableCellRenderer{ JCheckBox checkbox;
-	 * 
-	 * public TableCell() { // TODO Auto-generated constructor stub checkbox = new
-	 * JCheckBox();
-	 * 
-	 * checkbox.addActionListener(e -> {
-	 * System.out.println(result_table.getValueAt(result_table.getSelectedRow(),
-	 * 1)); });
-	 * 
-	 * }
-	 * 
-	 * @Override public Object getCellEditorValue() { // TODO Auto-generated method
-	 * stub return null; }
-	 * 
-	 * @Override public Component getTableCellRendererComponent(JTable table, Object
-	 * value, boolean isSelected, boolean hasFocus, int row, int column) { // TODO
-	 * Auto-generated method stub return checkbox; }
-	 * 
-	 * @Override public Component getTableCellEditorComponent(JTable table, Object
-	 * value, boolean isSelected, int row, int column) { // TODO Auto-generated
-	 * method stub return checkbox; }
-	 * 
-	 * }
-	 */
-	
 	
 	JCheckBox box = new JCheckBox();
 	DefaultCellEditor checkEditor = new DefaultCellEditor(box) {
@@ -279,6 +254,7 @@ public class GUI_Main extends JFrame {
 
 		}
 	};
+	
 	class cellCheckRenderer extends DefaultTableCellRenderer {
 
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
@@ -293,47 +269,6 @@ public class GUI_Main extends JFrame {
 		}
 
 	}
-	
-/*	class JTableCellEventTest extends JFrame  implements MouseListener {
-
-		@Override
-		public void mouseClicked(MouseEvent e) {
-			int row = result_table.getSelectedRow();
-			  int col = result_table.getSelectedColumn();
-			  for (int i = 0; i < result_table.getColumnCount(); i++) {
-			   System.out.print(row+col); 
-			  }
-		}
-		public void startEvent(){
-			result_table.addMouseListener(this);
-			 }
-
-
-		@Override
-		public void mouseEntered(MouseEvent arg0) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void mouseExited(MouseEvent arg0) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void mousePressed(MouseEvent arg0) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void mouseReleased(MouseEvent arg0) {
-			// TODO Auto-generated method stub
-			
-		}
-		 
-		}*/
 	
 	class PageTableModel extends AbstractTableModel {
 		private ArrayList<acdata> data;
@@ -377,8 +312,6 @@ public class GUI_Main extends JFrame {
 				return tmpdt.getPw();
 			case 5:
 				return tmpdt.getMadedate();
-			// case 6 :
-			// return data.get(rowIndex);
 			default:
 				return "invalid";
 			}

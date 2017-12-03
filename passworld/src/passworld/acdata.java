@@ -30,9 +30,13 @@ public class acdata {
 	 * @param madedate date when information changed. default : date when information added
 	 */
 	 private String madedate;
-	 
+	 /**
+	  * @param count number of times the item has been recalled
+	  */
 	 private int count;
-	 
+	 /**
+	  * @param isSelected whether selected or not in result table
+	  */
 	 public boolean isSelected = false;
 	
 	 //public boolean isSelected;
@@ -102,7 +106,7 @@ public class acdata {
 	 */
 	public int getcount() {return count;}
 	/**
-	 * Set the madedate Value of instance
+	 * Set the count Value of instance
 	 * @param count created date from db
 	 */
 	public void setcount(int count) {this.count = count;}

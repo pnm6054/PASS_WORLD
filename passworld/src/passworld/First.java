@@ -101,7 +101,6 @@ public class First extends JFrame {
 	public static final int DEFAULT_HEIGHT = 250;
 
 	public void isLoginCheck() {
-		//GoogleAuthTest.setupMockCredentialRepository();
 		OTP = new GoogleAuthTest();
 		if (OTP.authoriseUser(passwordField.getText())) {
 			JOptionPane.showMessageDialog(null, "Success");

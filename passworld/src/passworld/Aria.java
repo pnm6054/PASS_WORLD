@@ -3,9 +3,19 @@ package passworld;
 import java.io.UnsupportedEncodingException;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
-
+/** In cryptograpy, ARIA is a block chiper designed in 2003 <p/>
+ * by a large group of South Korea researchers. <p/>
+ * In 2004, the Korean Agency for Technology and Standards selected it <p/>
+ * as a standard cryptograpy technique <p/><p/><p/>
+ *                                     -copy from Wikipedia
+ * @author NSRI
+ *
+ */
 public class Aria {
 	
+	/**
+	 * @param key the key for encrypted
+	 */
 	static String key = "DefaultAriakey";
 	
 	private int[][] S = {
