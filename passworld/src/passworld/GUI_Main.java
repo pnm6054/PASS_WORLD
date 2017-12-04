@@ -83,6 +83,7 @@ public class GUI_Main extends JFrame {
 				if(j.getSelectedColumn()==0) model.data.get(j.getSelectedRow()).isSelected=!model.data.get(j.getSelectedRow()).isSelected;
 				if(e.getClickCount() == 2) { //더블클릭시 발생 이벤트
 					if(j.getSelectedColumn()!=0) { //0열이 아닐때만 발생
+						db.updateAccount(model.data.get(j.getSelectedRow()).getIndex()); //클릭할 때마다 DB의 항목에 count 1씩 추가
 						System.out.println(model.data.get(j.getSelectedRow()).getPw()); //해당 열의 비밀번호 출력
 						StringSelection strSel = new StringSelection(model.data.get(j.getSelectedRow()).getPw()); //비밀번호 복사
 						JOptionPane.showMessageDialog(null, model.data.get(j.getSelectedRow()).getPw() + " 복사완료", "알림",JOptionPane.INFORMATION_MESSAGE,null); //비밀번호 복사 메세지
@@ -154,6 +155,7 @@ public class GUI_Main extends JFrame {
 				model.fireTableDataChanged();}
 				}
 		});
+		
 		search_field.add(pw_hider_ck);
 
 		JButton registration = new JButton("등록");
@@ -263,7 +265,7 @@ public class GUI_Main extends JFrame {
 
 		}
 	}
-	class PW_Hider_Renderer extends DefaultTableCellRenderer {
+	class PW_Hider_Renderer extends DefaultTableCellRenderer { //비밀번호 부분을 가려주는 라벨 생성
 
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
 				int row, int column) {
