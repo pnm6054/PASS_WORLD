@@ -160,18 +160,7 @@ public class Login extends JFrame {
 		btnsubmit = new JButton("확인");
 		btnsubmit.setBackground(new Color(255,139,139));
 		btnsubmit.setBounds(105, 380, 100, 30);
-		btnsubmit.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				if(PW.getText().equals(re_PW.getText())){
-					pw_eq.setText("일치");
-					pw_eq.setForeground(Color.GREEN);
-				}
-				else{
-					pw_eq.setText("불일치");
-					pw_eq.setForeground(Color.RED);
-				}
-			}
-		});
+	
 		btnsubmit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(db.insertAccount(field_SN.getText(), field_KW.getText(), field_ID.getText(), field_PW.getText(), field_mkdate.getText())==true) {
