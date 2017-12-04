@@ -20,8 +20,7 @@ public class GUI_Main extends JFrame {
 	JCheckBox pw_hider;
 	Calendar cal = Calendar.getInstance();
 	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-	
-	//Date toDay = new java.text.SimpleDateFormat("yyyy-MM-dd").format(cal.getTime());
+	//Date toDay = format(cal.getTime());
 	
 
 
@@ -333,9 +332,8 @@ public class GUI_Main extends JFrame {
 	}
 
 	class CompareDates {
-		public boolean isFinished(String end_date) throws ParseException {
-			SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			Date product_end = date.parse(end_date);
+		public boolean isFinished(String generation_date) throws ParseException {
+			Date product_end = formatter.parse(generation_date);
 			Date current = new Date();
 			return current.after(product_end);
 		}
