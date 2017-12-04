@@ -15,7 +15,7 @@ public class GUI_Main extends JFrame {
 	PageTableModel model;
 	JTable result_table;
 	Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-
+//  aaa
 
 	public GUI_Main()  {
 		super("PASS WORLD");
