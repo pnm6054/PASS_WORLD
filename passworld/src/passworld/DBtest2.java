@@ -82,11 +82,11 @@ public class DBtest2 {
 		return isSuccess;
 	}
 
-	public boolean search(String word) { // 유저 정보 갱신
+	public boolean search(String word) { // 검색 기능
 		boolean isSuccess = false;
 		try {
 			System.out.println(word);
-			stmt = conn.prepareStatement("SELECT rowid,*" + "FROM Main WHERE siteid like ? or keyword like ?"); // 쿼리문
+			stmt = conn.prepareStatement("SELECT rowid,*" + "FROM Main WHERE siteid like ? or keyword like ? order by count desc"); // 쿼리문
 																												// 전송
 			stmt.setString(1, '%' + word + '%');
 			stmt.setString(2, '%' + word + '%');
@@ -223,6 +223,22 @@ public class DBtest2 {
 		}
 		return isSuccess;
     }
+	
+	protected boolean updateAccount(int index) {
+		boolean isSuccess = true;
+		String sql = "update Main set count = count+1 where rowid = ?";
+		try {
+			System.out.println(sql);
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, index);
+			stmt.executeUpdate();
+		}catch(SQLException e) {
+			System.err.println("Error : Can't update count\n");
+			System.out.println(e.getMessage());
+			isSuccess = false;
+		}
+		return isSuccess;
+	}
 	
 	private void loadInfo(String username, String SECRET_KEY) {
 		boolean isSuccess = true;
