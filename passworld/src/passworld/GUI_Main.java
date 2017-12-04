@@ -3,9 +3,10 @@ package passworld;
 import java.awt.*;
 import java.awt.datatransfer.*;
 import java.awt.event.*;
-import java.util.ArrayList;
+import java.text.*;
+import java.util.*;
+
 import javax.swing.*;
-import javax.swing.plaf.ColorUIResource;
 import javax.swing.table.*;
 
 public class GUI_Main extends JFrame {
@@ -17,6 +18,11 @@ public class GUI_Main extends JFrame {
 	JTable result_table;
 	Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 	JCheckBox pw_hider;
+	Calendar cal = Calendar.getInstance();
+	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+	
+	//Date toDay = new java.text.SimpleDateFormat("yyyy-MM-dd").format(cal.getTime());
+	
 
 
 	public GUI_Main()  {
@@ -324,7 +330,15 @@ public class GUI_Main extends JFrame {
 				return "invalid";
 			}
 		}
+	}
 
+	class CompareDates {
+		public boolean isFinished(String end_date) throws ParseException {
+			SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date product_end = date.parse(end_date);
+			Date current = new Date();
+			return current.after(product_end);
+		}
 	}
 
 }
