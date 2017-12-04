@@ -1,58 +1,16 @@
-/*
- * Copyright (c) 2014-2015 Enrico M. Crisostomo
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- *   * Redistributions of source code must retain the above copyright notice, this
- *     list of conditions and the following disclaimer.
- *
- *   * Redistributions in binary form must reproduce the above copyright notice,
- *     this list of conditions and the following disclaimer in the documentation
- *     and/or other materials provided with the distribution.
- *
- *   * Neither the name of the author nor the names of its
- *     contributors may be used to endorse or promote products derived from
- *     this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
 package passworld;
 
 import com.warrenstrange.googleauth.*;
 import com.warrenstrange.googleauth.GoogleAuthenticatorConfig.GoogleAuthenticatorConfigBuilder;
 
-import java.awt.Color;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.MediaTracker;
-import java.awt.Toolkit;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.math.BigInteger;
-import java.net.URL;
 import java.sql.*;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import javax.imageio.ImageIO;
-import javax.swing.*;
+
 /**
- * Not really a unit test, but it shows the basic usage of this package.
+ * Not really a unit test, but it shows the basic usage of GoogleAuth.jar.
  * To properly test the authenticator, manual intervention and multiple steps
  * are required:
  * <ol>
@@ -68,6 +26,10 @@ import javax.swing.*;
  * </ol>
  */
 
+/**
+ *@author jinyoung.Y
+ *This class related 'googleauth.jar'.
+ */
 public class GoogleAuthTest
 {
 
@@ -83,12 +45,13 @@ public class GoogleAuthTest
     private static String username = "Default";
     DBtest2 db = new DBtest2();
     
+    
     public GoogleAuthTest() {
     	loadInfo();
     	setupMockCredentialRepository();
-    	
     }
    
+    
     public static void setupMockCredentialRepository()
     {
         System.setProperty(
@@ -109,31 +72,57 @@ public class GoogleAuthTest
         return ret;
     }
     
-    public static String createCredentialsForUser(String name, String email)
+    /**
+     * 'main' method is test method to test
+     * whether this works correctly without other class.
+     * */
+    
+    /*
+    public static void main(String[] args) {
+    	
+    	setupMockCredentialRepository();
+    	//createCredentialsForUser();
+    	System.out.println(SECRET_KEY);
+    	authoriseUser("201561");
+
+    	System.out.println(VALIDATION_CODE);
+    }*/
+    
+    /**
+     * This method is create credentials for user.
+     * key is credential for generate secret key.
+     * SECRET_KEY is the secret key.
+     * This method shows the secret key and QRcode after running this method.
+     * 
+     * @param otpAuthURL
+     * @param name
+     * @param email
+     */
+    public static void createCredentialsForUser(String name, String email)
     {
         GoogleAuthenticator googleAuthenticator = new GoogleAuthenticator();
-        DBtest2 db = new DBtest2();
+
         final GoogleAuthenticatorKey key =
                 googleAuthenticator.createCredentials(name);
         final String SECRET_KEY = key.getKey();
+        //final List<Integer> scratchCodes = key.getScratchCodes();
 
         String otpAuthURL = GoogleAuthenticatorQRGenerator.getOtpAuthURL(name, email, key);
-        db.registerInfo(name,SECRET_KEY);
+
+        registerInfo(name,SECRET_KEY);
         System.out.println("Please register (otpauth uri): " + otpAuthURL);
         System.out.println("Secret key is " + SECRET_KEY);
-		
-        /** pop up the QR Code when registration button clicked
-         *  QR code download from internet and deposit in ext folder 
-         * @author 
-         */
-        /*            *인터넷에서 이미지를 가져와서 저장하는 방법*
-         *    http://blog.naver.com/gntvnt1/221042266094
-         */        
-        new QRcode(otpAuthURL); //QR코드 창 출력
-        db.closeDB();
-        return SECRET_KEY;
     }
 
+    /**
+     * 'authoriseUser' method determines whether the OTP code generated by user 
+     * and the OTP code generated by PassWorld are the same.
+     * If this method determines they are same, 
+     * The user has the right to Log-In.
+     * 
+     * @param VALIDATION_CODE
+     * @return true(same) or false(not same)
+     */
     public static boolean authoriseUser(String VALIDATION_CODE)
     {
         GoogleAuthenticatorConfigBuilder gacb =
@@ -151,7 +140,9 @@ public class GoogleAuthTest
     
     /** connect to db for loading Information to login
      * 
-     * @param
+     * @param conn
+     * @param stat
+     * @param rs
      */
     private void loadInfo() {
     	Connection conn = null;
@@ -173,48 +164,30 @@ public class GoogleAuthTest
             System.out.println(e.getMessage());
         }
     }
-}
-
-class QRcode extends JDialog implements MouseListener{
-    BufferedImage img=null;// 버퍼(메모리)에 이미지를 올릴 때 쓰임
-	Dimension d = getToolkit().getScreenSize(); //화면 크기 측정
-    public QRcode(String url){
-    	setTitle("클릭하면 닫힘"); 
-        setSize(215,240); 
-    	setLocation(d.width / 2 - getWidth() / 2, d.height / 2 - getHeight() / 2); //정중앙에 생성
-    	setResizable(false); //크기조절 불가
-        setVisible(true);
-        try {
-            img = ImageIO.read(new URL(url));// 윈도우에선 경로가 \라서 \\라고 입력해줘야 한다.
-        } catch (IOException e) {// ImageIO이것을 적으면 catch문으로 예외처리를 해야 한다. 예외처리를 하도록 클래스 설계자가 적어두어서 반드시 해줘야 한다.
-            // 입력과 출력이 rfid, 소켓통신, 윈도우, 임베디드 등등 입출력이 너무 다양하기 때문에..
-            e.printStackTrace();
-            System.out.println(e.getMessage());
-            System.out.println("에러 나셨습니다!!");// 일부러 없는 파일을 열어서 에러문을 출력해봐라, (이런 프린트문의 출력은 필요없다) 이 줄을 뺀것이 예외처리의 기본형태
-            System.exit(0);// 이 구문은 컴퓨터를 빠져 나와라는 것이다. 인자값 0의 의미는 0일땐 어떤게 실패, 1은 연결되었다 실패, 2는... 숫자로 의미를 부여할 수 있다.
-            // 아이폰은 예외처리를 표시도 안하고(공백, 오류나도 안알려줌), 윈도우는 블루스크린을 띄워라는 것이 담겨있다.
-        }
-        MyPanel1 panel = new MyPanel1();
-        add(panel);
-        pack();
-        addMouseListener(this);//클릭시 닫히는 액션
-    }
     
-    class MyPanel1 extends JPanel{
-        public void paint(Graphics g){// 페인트 컴포넌트나 페인트나 같다.
-            g.drawImage(img, 0, 0, null);
-        }        
-        public Dimension getPreferredSize(){// 만약 오타등으로 오버라이드가 안되었다면 툴을 이용해 불러와라
-            if (img == null)
-                return new Dimension(300, 300);
-            else
-                return new Dimension(img.getWidth(null), img.getHeight(null));// 인자값이 (null)이나 ()이나 같다.
+    /**
+     * This method save register information in database.
+     * @param username
+     * @param secretcode
+     */
+    private static void registerInfo(String username, String secretcode) {
+    	Connection conn = null;
+    	PreparedStatement pstat = null;
+    	int result = 0;
+		try {
+			// db parameters
+			String url = "jdbc:sqlite:ext/main.db";
+			// create a connection to the database
+			conn = DriverManager.getConnection(url);
+			            
+			System.out.println("Connection to SQLite has been established.");
+			
+			pstat = conn.prepareStatement("update Google_Auth set secretcode = ?, username = ? where rowid = 1");
+			pstat.setString(1, secretcode);
+			pstat.setString(2, username);
+			result = pstat.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("계정 등록 에러" + e.getMessage());
         }
     }
-    public void mouseClicked(MouseEvent arg0) {super.dispose();}
-    public void mouseEntered(MouseEvent e) {}
-    public void mouseExited(MouseEvent e) {}
-    public void mousePressed(MouseEvent e) {}
-    public void mouseReleased(MouseEvent e) {}
 }
-
