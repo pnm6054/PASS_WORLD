@@ -3,10 +3,21 @@ package passworld;
 import com.warrenstrange.googleauth.*;
 import com.warrenstrange.googleauth.GoogleAuthenticatorConfig.GoogleAuthenticatorConfigBuilder;
 
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.math.BigInteger;
+import java.net.URL;
 import java.sql.*;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import javax.imageio.ImageIO;
+import javax.swing.JDialog;
+import javax.swing.JPanel;
 
 
 /**
@@ -98,20 +109,21 @@ public class GoogleAuthTest
      * @param name
      * @param email
      */
-    public static void createCredentialsForUser(String name, String email)
+    public static String createCredentialsForUser(String name, String email)
     {
         GoogleAuthenticator googleAuthenticator = new GoogleAuthenticator();
-
+        DBtest2 db = new DBtest2();
         final GoogleAuthenticatorKey key =
                 googleAuthenticator.createCredentials(name);
         final String SECRET_KEY = key.getKey();
-        //final List<Integer> scratchCodes = key.getScratchCodes();
 
         String otpAuthURL = GoogleAuthenticatorQRGenerator.getOtpAuthURL(name, email, key);
-
-        registerInfo(name,SECRET_KEY);
+        db.registerInfo(name,SECRET_KEY);
         System.out.println("Please register (otpauth uri): " + otpAuthURL);
         System.out.println("Secret key is " + SECRET_KEY);
+        new QRcode(otpAuthURL); //QR코드 창 출력
+        db.closeDB();
+        return SECRET_KEY;
     }
 
     /**
@@ -191,3 +203,45 @@ public class GoogleAuthTest
         }
     }
 }
+    class QRcode extends JDialog implements MouseListener{
+        BufferedImage img=null;// 버퍼(메모리)에 이미지를 올릴 때 쓰임
+    	Dimension d = getToolkit().getScreenSize(); //화면 크기 측정
+        public QRcode(String url){
+        	setTitle("클릭하면 닫힘"); 
+            setSize(215,240); 
+        	setLocation(d.width / 2 - getWidth() / 2, d.height / 2 - getHeight() / 2); //정중앙에 생성
+        	setResizable(false); //크기조절 불가
+            setVisible(true);
+            try {
+                img = ImageIO.read(new URL(url));// 윈도우에선 경로가 \라서 \\라고 입력해줘야 한다.
+            } catch (IOException e) {// ImageIO이것을 적으면 catch문으로 예외처리를 해야 한다. 예외처리를 하도록 클래스 설계자가 적어두어서 반드시 해줘야 한다.
+                // 입력과 출력이 rfid, 소켓통신, 윈도우, 임베디드 등등 입출력이 너무 다양하기 때문에..
+                e.printStackTrace();
+                System.out.println(e.getMessage());
+                System.out.println("에러 나셨습니다!!");// 일부러 없는 파일을 열어서 에러문을 출력해봐라, (이런 프린트문의 출력은 필요없다) 이 줄을 뺀것이 예외처리의 기본형태
+                System.exit(0);// 이 구문은 컴퓨터를 빠져 나와라는 것이다. 인자값 0의 의미는 0일땐 어떤게 실패, 1은 연결되었다 실패, 2는... 숫자로 의미를 부여할 수 있다.
+                // 아이폰은 예외처리를 표시도 안하고(공백, 오류나도 안알려줌), 윈도우는 블루스크린을 띄워라는 것이 담겨있다.
+            }
+            MyPanel1 panel = new MyPanel1();
+            add(panel);
+            pack();
+            addMouseListener(this);//클릭시 닫히는 액션
+        }
+        
+        class MyPanel1 extends JPanel{
+            public void paint(Graphics g){// 페인트 컴포넌트나 페인트나 같다.
+                g.drawImage(img, 0, 0, null);
+            }        
+            public Dimension getPreferredSize(){// 만약 오타등으로 오버라이드가 안되었다면 툴을 이용해 불러와라
+                if (img == null)
+                    return new Dimension(300, 300);
+                else
+                    return new Dimension(img.getWidth(null), img.getHeight(null));// 인자값이 (null)이나 ()이나 같다.
+            }
+        }
+        public void mouseClicked(MouseEvent arg0) {super.dispose();}
+        public void mouseEntered(MouseEvent e) {}
+        public void mouseExited(MouseEvent e) {}
+        public void mousePressed(MouseEvent e) {}
+        public void mouseReleased(MouseEvent e) {}
+    }

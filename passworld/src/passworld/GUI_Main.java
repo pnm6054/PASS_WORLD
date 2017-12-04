@@ -7,6 +7,8 @@ import java.text.*;
 import java.util.*;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.plaf.ColorUIResource;
 import javax.swing.table.*;
 //aaa
 public class GUI_Main extends JFrame {
@@ -20,9 +22,7 @@ public class GUI_Main extends JFrame {
 	JCheckBox pw_hider;
 	Calendar cal = Calendar.getInstance();
 	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-	//Date toDay = format(cal.getTime());
 	
-
 	public GUI_Main()  {
 		super("PASS WORLD");
 		// setTitle("PASS WORLD");
@@ -252,9 +252,56 @@ public class GUI_Main extends JFrame {
 		frame.setVisible(true);
 		// return frame;
 	}
-	
+	/*
+	class DefaultCellRenderer extends DefaultTableCellRenderer {
+		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
+				int row, int column) {
+			if()
+			dtcr.setBackground(Color.red);
+	}
+*/
+	/*class DefaultTableCellRenderer implements TableCellRenderer {
 
-
+			private JLabel label ;
+		    *//**
+		     * 4XX대 코드에서 보여줄 글자색
+		     *//*
+		    private ColorUIResource rs400 = new ColorUIResource(0xff, 0x0, 0x0);
+		    
+		    public DefaultTableCellRenderer(){
+		        this.label = new JLabel();
+		        this.label.setOpaque(true);
+		        this.label.setBorder(new EmptyBorder(new Insets(5, 5, 5, 5)));
+		        System.out.println("created StatusCodeRenderer");
+		    }
+		    
+		    @Override
+		    public Component getTableCellRendererComponent(JTable table, Object value,
+		            boolean isSelected, boolean hasFocus, int row, int column) {
+		        Color fg = UIManager.getColor("Table.foreground");
+		        Color bg = UIManager.getColor("Table.background");
+		        
+		        if ( isSelected ){
+		            fg = UIManager.getColor("Table.selectionForeground");
+		            bg = UIManager.getColor("Table.selectionBackground");
+		        }
+		        // "HTTP1.1/ XXX [RS MESSAGE] 에서 응답 코드 XXX만 추출
+		        int rsCode = Integer.parseInt(value.toString().substring(9, 12));
+		        if ( rsCode >= 400 ){
+		            fg = rs400;
+		        }
+		        else if ( rsCode >= 300){
+		            fg = rs300;
+		        }
+		        
+		        label.setBackground(bg);
+		        label.setForeground(fg);
+		        label.setText(value.toString());
+		        label.setFont(table.getFont());
+		        return label;
+		    }
+		
+	}*/
 	
 	class cellCheckRenderer extends DefaultTableCellRenderer {
 
@@ -275,12 +322,22 @@ public class GUI_Main extends JFrame {
 				int row, int column) {
 
 			JLabel hided_pw = new JLabel("************");
+			
 
 			return hided_pw;
 
 		}
 	}
 	
+	
+	public boolean date_comp(String generation_date) throws ParseException {
+		boolean isexceeded = false;
+		Date date_gen = formatter.parse(generation_date);
+		Date today = new Date();
+		long betweendays = (today.getTime()-date_gen.getTime())/(24 * 60 * 60 * 1000);
+		if(betweendays<60) isexceeded=true;
+		return isexceeded;
+	}
 	
 	class PageTableModel extends AbstractTableModel {
 		private ArrayList<acdata> data;
@@ -302,7 +359,7 @@ public class GUI_Main extends JFrame {
 		}
 
 		public boolean isCellEditable(int row, int col) {
-			if (col == 0 || col == 4) {
+			if (col == 0) {
 				return true;
 			}
 			return false;
@@ -329,13 +386,4 @@ public class GUI_Main extends JFrame {
 			}
 		}
 	}
-
-	class CompareDates {
-		public boolean isFinished(String generation_date) throws ParseException {
-			Date product_end = formatter.parse(generation_date);
-			Date current = new Date();
-			return current.after(product_end);
-		}
-	}
-
 }
