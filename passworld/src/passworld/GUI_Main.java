@@ -5,6 +5,7 @@ import java.awt.datatransfer.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 import javax.swing.*;
+import javax.swing.plaf.ColorUIResource;
 import javax.swing.table.*;
 
 public class GUI_Main extends JFrame {
@@ -15,6 +16,7 @@ public class GUI_Main extends JFrame {
 	PageTableModel model;
 	JTable result_table;
 	Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+	JCheckBox pw_hider;
 
 
 	public GUI_Main()  {
@@ -37,6 +39,7 @@ public class GUI_Main extends JFrame {
 		TableColumnModel columnModel = new DefaultTableColumnModel();
 		TableCellRenderer renderer = new DefaultTableCellRenderer();
 		DefaultTableCellRenderer cbrenderer = new cellCheckRenderer();
+		DefaultTableCellRenderer pw_hider = new PW_Hider_Renderer();
 
 		TableColumn column = new TableColumn(0);
 		JCheckBox box = new JCheckBox();
@@ -59,16 +62,16 @@ public class GUI_Main extends JFrame {
 		column.setHeaderValue("ID");
 		columnModel.addColumn(column);
 
-		column = new TableColumn(4);
-		column.setHeaderValue("PassWord");
-		columnModel.addColumn(column);
+		TableColumn column_pw = new TableColumn(4);
+		column_pw.setHeaderValue("PassWord");
+		columnModel.addColumn(column_pw);
 
 		column = new TableColumn(5);
 		column.setHeaderValue("등록일자");
 		columnModel.addColumn(column);
 
 		columnModel.setColumnSelectionAllowed(false); // true일시 (x,y)가 선택 false일시 (x)만 선택
-
+		
 		result_table = new JTable(model, columnModel);
 		result_table.getTableHeader().setReorderingAllowed(false); //column위치 이동 제한
 		result_table.setRowHeight(20);
@@ -132,14 +135,26 @@ public class GUI_Main extends JFrame {
 				model.addAcInfo(db.result);// 검색된 결과를 table모델에 전달
 				model.fireTableDataChanged();// 화면 상에 보이는 표를 업데이트
 			}
-
 		});
-
 		/*
 		 * table을 리셋할때 쓰는 명령어들 (혹시 몰라서 남겨둠) scrollPane.getViewport().repaint();
 		 * dtm.setRowCount(0); table.repaint(); dtm.fireTableDataChanged();
 		 * table.updateUI();
 		 */
+		
+		JCheckBox pw_hider_ck = new JCheckBox(); //비밀번호를 가려주는 설정을 위한 체크박스
+		pw_hider_ck.setLocation(350, 43);
+		pw_hider_ck.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				if(e.getStateChange()==ItemEvent.SELECTED) {
+				column_pw.setCellRenderer(pw_hider);
+				model.fireTableDataChanged();
+				}
+				else { column_pw.setCellRenderer(renderer);
+				model.fireTableDataChanged();}
+				}
+		});
+		search_field.add(pw_hider_ck);
 
 		JButton registration = new JButton("등록");
 		registration.setBackground(new Color(255, 139, 139));
@@ -195,7 +210,6 @@ public class GUI_Main extends JFrame {
 						JOptionPane.showMessageDialog(null, "하나의 컬럼만 선택해주세요.");
 					break;
 				}
-				
 			}
 		});
 
@@ -233,27 +247,8 @@ public class GUI_Main extends JFrame {
 		// return frame;
 	}
 	
-	JCheckBox box = new JCheckBox();
-	DefaultCellEditor checkEditor = new DefaultCellEditor(box) {
 
-		public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected,
 
-				int row, int column) {
-
-			JCheckBox editor = null;
-			
-			editor = (JCheckBox) super.getTableCellEditorComponent(table, value, isSelected, row, column);
-
-			editor.addActionListener(new ActionListener() {
-			      @Override public void actionPerformed(ActionEvent e) {
-			    	  model.data.get(row).isSelected=!model.data.get(row).isSelected;
-			    	  model.fireTableCellUpdated(row, column);
-				      }
-				    });
-			return editor;
-
-		}
-	};
 	
 	class cellCheckRenderer extends DefaultTableCellRenderer {
 
@@ -267,8 +262,19 @@ public class GUI_Main extends JFrame {
 			return check;
 
 		}
-
 	}
+	class PW_Hider_Renderer extends DefaultTableCellRenderer {
+
+		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
+				int row, int column) {
+
+			JLabel hided_pw = new JLabel("************");
+
+			return hided_pw;
+
+		}
+	}
+	
 	
 	class PageTableModel extends AbstractTableModel {
 		private ArrayList<acdata> data;
@@ -290,7 +296,7 @@ public class GUI_Main extends JFrame {
 		}
 
 		public boolean isCellEditable(int row, int col) {
-			if (col == 0) {
+			if (col == 0 || col == 4) {
 				return true;
 			}
 			return false;
