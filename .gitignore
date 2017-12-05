@@ -5,7 +5,7 @@
 *.log
 
 # db file
-/ext/main.db
+/passworld/ext/main.db
 
 # BlueJ files
 *.ctxt
