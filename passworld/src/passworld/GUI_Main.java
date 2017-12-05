@@ -41,6 +41,7 @@ public class GUI_Main extends JFrame {
 
 		model = new PageTableModel();
 		TableColumnModel columnModel = new DefaultTableColumnModel();
+		DefaultTableCellRenderer statusrenderer = new CellStatusRenderer();
 		TableCellRenderer renderer = new DefaultTableCellRenderer();
 		DefaultTableCellRenderer cbrenderer = new cellCheckRenderer();
 		DefaultTableCellRenderer pw_hider = new PW_Hider_Renderer();
@@ -49,7 +50,6 @@ public class GUI_Main extends JFrame {
 		JCheckBox box = new JCheckBox();
 		column.setCellRenderer(cbrenderer);
 		column.setCellEditor(new DefaultCellEditor(box));
-		//column.setCellEditor(checkEditor);
 		column.setHeaderValue(" ");
 		column.setPreferredWidth(5);
 		columnModel.addColumn(column);
@@ -72,6 +72,7 @@ public class GUI_Main extends JFrame {
 
 		column = new TableColumn(5);
 		column.setHeaderValue("등록일자");
+		column.setCellRenderer(statusrenderer);
 		columnModel.addColumn(column);
 
 		columnModel.setColumnSelectionAllowed(false); // true일시 (x,y)가 선택 false일시 (x)만 선택
@@ -107,7 +108,9 @@ public class GUI_Main extends JFrame {
 		// Add the scroll pane to this panel.
 		table_Panel.add(scrollPane);
 		scrollPane.setBackground(Color.WHITE);
-
+		scrollPane.getViewport().setBackground(Color.WHITE);
+		scrollPane.setPreferredSize(new Dimension(getWidth()-30, getHeight()-100));
+		
 		JTextField keyword_field = new JTextField("", 20);
 		keyword_field.setBounds(55, 44, 259, 24);
 		keyword_field.setColumns(10);
@@ -129,9 +132,9 @@ public class GUI_Main extends JFrame {
 		search_field.add(keyword_field);
 
 
-		ImageIcon search = new ImageIcon("src/2.PNG");
+		ImageIcon search = new ImageIcon("ext/2.PNG");
 		JButton search_button = new JButton(search);
-		search_button.setBounds(328, 43, 25, 27);
+		search_button.setPreferredSize(new Dimension(25, 25));
 		search_field.add(search_button);
 		search_button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -177,8 +180,7 @@ public class GUI_Main extends JFrame {
 		JButton modification = new JButton("수정");
 		modification.setBackground(new Color(255, 139, 139));
 		modification.setPreferredSize(new Dimension(80, 27));
-		// modification.setBorder(BorderFactory.createMatteBorder(5,5,5,5,
-		// Color.BLACK));
+		//modification.setBorder(BorderFactory.createMatteBorder(5,5,5,5,Color.BLACK));
 		modification.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int i = 0; //while문의 반복을 위한 변수
@@ -225,7 +227,6 @@ public class GUI_Main extends JFrame {
 		// deletion.setBorder(BorderFactory.createMatteBorder(5,5,5,5, Color.BLACK));
 		deletion.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//ArrayList<Integer> rowid_list = new ArrayList<Integer>();
 				int i = 0;
 				int j = 0;
 				while( i<db.result.size()) {
@@ -260,15 +261,17 @@ public class GUI_Main extends JFrame {
 			dtcr.setBackground(Color.red);
 	}
 */
-	/*class DefaultTableCellRenderer implements TableCellRenderer {
+	class CellStatusRenderer extends DefaultTableCellRenderer {
 
+		Date today = new Date();
 			private JLabel label ;
-		    *//**
+		    /**
 		     * 4XX대 코드에서 보여줄 글자색
-		     *//*
+		     */
 		    private ColorUIResource rs400 = new ColorUIResource(0xff, 0x0, 0x0);
+		    //private ColorUIResource rs300 = new ColorUIResource(0xaa, 0x5a, 0xff);
 		    
-		    public DefaultTableCellRenderer(){
+		    public CellStatusRenderer(){
 		        this.label = new JLabel();
 		        this.label.setOpaque(true);
 		        this.label.setBorder(new EmptyBorder(new Insets(5, 5, 5, 5)));
@@ -280,20 +283,21 @@ public class GUI_Main extends JFrame {
 		            boolean isSelected, boolean hasFocus, int row, int column) {
 		        Color fg = UIManager.getColor("Table.foreground");
 		        Color bg = UIManager.getColor("Table.background");
-		        
-		        if ( isSelected ){
-		            fg = UIManager.getColor("Table.selectionForeground");
-		            bg = UIManager.getColor("Table.selectionBackground");
-		        }
-		        // "HTTP1.1/ XXX [RS MESSAGE] 에서 응답 코드 XXX만 추출
-		        int rsCode = Integer.parseInt(value.toString().substring(9, 12));
-		        if ( rsCode >= 400 ){
+		        try {
+		        Date date_gen;
+					date_gen = formatter.parse(db.result.get(row).getMadedate());
+				
+		        int betweendays = (int) ((today.getTime()-date_gen.getTime())/(24 * 60 * 60 * 1000));
+		        if ( betweendays >= 60 ){
 		            fg = rs400;
 		        }
-		        else if ( rsCode >= 300){
+		       /* else if ( betweendays >= 0){
 		            fg = rs300;
-		        }
-		        
+		        }*/
+		        } catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 		        label.setBackground(bg);
 		        label.setForeground(fg);
 		        label.setText(value.toString());
@@ -301,7 +305,7 @@ public class GUI_Main extends JFrame {
 		        return label;
 		    }
 		
-	}*/
+	}
 	
 	class cellCheckRenderer extends DefaultTableCellRenderer {
 
@@ -316,6 +320,7 @@ public class GUI_Main extends JFrame {
 
 		}
 	}
+	
 	class PW_Hider_Renderer extends DefaultTableCellRenderer { //비밀번호 부분을 가려주는 라벨 생성
 
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
@@ -327,16 +332,6 @@ public class GUI_Main extends JFrame {
 			return hided_pw;
 
 		}
-	}
-	
-	
-	public boolean date_comp(String generation_date) throws ParseException {
-		boolean isexceeded = false;
-		Date date_gen = formatter.parse(generation_date);
-		Date today = new Date();
-		long betweendays = (today.getTime()-date_gen.getTime())/(24 * 60 * 60 * 1000);
-		if(betweendays<60) isexceeded=true;
-		return isexceeded;
 	}
 	
 	class PageTableModel extends AbstractTableModel {
