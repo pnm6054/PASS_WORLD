@@ -98,7 +98,7 @@ public class Login extends JFrame {
 		field_KW.addKeyListener(new KeyListener() {
 			public void keyPressed(KeyEvent e)
 			{
-			        // Enter키가 눌렸다면
+			        // tab키가 눌렸다면
 			        if(e.getKeyCode() == KeyEvent.VK_TAB) {
 			        	field_ID.requestFocus();
 			        }
@@ -163,11 +163,19 @@ public class Login extends JFrame {
 	
 		btnsubmit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(db.insertAccount(field_SN.getText(), field_KW.getText(), field_ID.getText(), field_PW.getText(), field_mkdate.getText())==true) {
-					JOptionPane.showMessageDialog(null, "등록성공");
-					dispose();
+				if(field_PW.getText().toString().length()!=0 && field_ID.getText().toString().length()!=0 && field_SN.getText().toString().length()!=0) {
+					if(field_mkdate.getText().toString().length()==10 || field_mkdate.getText().toString().length()==0) {
+						if(db.insertAccount(field_SN.getText(), field_KW.getText(), field_ID.getText(), field_PW.getText(), field_mkdate.getText())==true) {
+							JOptionPane.showMessageDialog(null, "등록성공");
+							dispose();
+						}else {
+							JOptionPane.showMessageDialog(null, "등록실패");
+						}
+					}else {
+						JOptionPane.showMessageDialog(null, "YYYY-MM-DD형식으로 입력해주세요\n공백으로 입력시 현재 날짜가 저장됩니다.", "ERROR", JOptionPane.ERROR_MESSAGE);
+					}
 				}else {
-					JOptionPane.showMessageDialog(null, "등록실패");
+					JOptionPane.showMessageDialog(null, "필수 항목 미입력", "ERROR", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});

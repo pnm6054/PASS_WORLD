@@ -147,7 +147,12 @@ public class DB {
 
 	protected boolean insertAccount(String siteid, String keyword, String id, String pw, String makedate) {
 		boolean isSuccess = true;
-		String sql = "INSERT INTO Main(siteid, keyword, id, pw, makedate) VALUES(?,?,?,?,?)";
+		String sql;
+		if(makedate.toString().length()==0) {
+		sql = "INSERT INTO Main(siteid, keyword, id, pw, makedate) VALUES(?,?,?,?,current_date)";
+		}else {
+			sql = "INSERT INTO Main(siteid, keyword, id, pw, makedate) VALUES(?,?,?,?,?)";
+		}
 		try {
 			// String sql = "insert into Main(siteid,id,pw) values(\'" + siteid + "\', \'" +
 			// id + "\', \'" + pw + "\');";
@@ -156,7 +161,7 @@ public class DB {
 			stmt.setString(2, keyword);
 			stmt.setString(3, id);
 			stmt.setString(4, aria.Encrypt(pw));
-			stmt.setString(5, makedate);
+			if(makedate.toString().length()!=0) stmt.setString(5, makedate);
 			stmt.executeUpdate();
 		} catch (SQLException e) {
 			System.err.println("Error : Insert Account\n");
