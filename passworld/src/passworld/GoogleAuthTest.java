@@ -54,7 +54,7 @@ public class GoogleAuthTest
     private static String SECRET_KEY = "2QV45ZM5LWEEBO6L";
     private static int VALIDATION_CODE = 911556;
     private static String username = "Default";
-    DBtest2 db = new DBtest2();
+    DB db = new DB();
     
     
     public GoogleAuthTest() {
@@ -115,7 +115,7 @@ public class GoogleAuthTest
     public static String createCredentialsForUser(String name, String email)
     {
         GoogleAuthenticator googleAuthenticator = new GoogleAuthenticator();
-        DBtest2 db = new DBtest2();
+        DB db = new DB();
         final GoogleAuthenticatorKey key =
                 googleAuthenticator.createCredentials(name);
         final String SECRET_KEY = key.getKey();

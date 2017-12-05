@@ -36,7 +36,7 @@ public class Login extends JFrame {
 	private JPasswordField field_re_PW = new JPasswordField();
 	private JTextField field_mkdate = new JTextField();
 	private JButton btnsubmit = new JButton("»Æ¿Œ");
-	DBtest2 db = new DBtest2();
+	DB db = new DB();
 	/**
 	 * Launch the application.
 	 *//*

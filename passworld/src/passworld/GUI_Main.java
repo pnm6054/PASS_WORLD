@@ -15,7 +15,7 @@ public class GUI_Main extends JFrame {
 	JPanel search_field = new JPanel();
 	JPanel table_Panel = new JPanel();
 	JPanel func_field = new JPanel();
-	DBtest2 db = new DBtest2();
+	DB db = new DB();
 	PageTableModel model;
 	JTable result_table;
 	Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();

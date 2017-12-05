@@ -1,319 +1,275 @@
 package passworld;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Vector;
-/** connect to ext/main.db
- * schema of main.db's table 'Main'
+
+import javax.swing.JOptionPane;
+
+/**
+ * connect to ext/main.db schema of main.db's table 'Main'
  * <p/>
- * CREATE TABLE Main (
- * siteid text not null collate nocase, //The name of the site can not be blank. and They are not case-sensitive.
+ * CREATE TABLE Main ( siteid text not null collate nocase, //The name of the
+ * site can not be blank. and They are not case-sensitive.
  * <p/>
- * keyword text default siteid collate nocase, // If the keyword is blank, place the name of the site. and They are not case-sensitive.
+ * keyword text default siteid collate nocase, // If the keyword is blank, place
+ * the name of the site. and They are not case-sensitive.
  * <p/>
  * id text not null, // The name of the site can not be blank.
  * <p/>
- * pw text default 'UNKNOWN', //If the password is blank, place the String 'UNKNOWN'.
+ * pw text default 'UNKNOWN', //If the password is blank, place the String
+ * 'UNKNOWN'.
  * <p/>
- * makedate not null default current_date, //If the password is blank, database place the date when registered.
+ * makedate not null default current_date, //If the password is blank, database
+ * place the date when registered.
  * <p/>
  * count int not null default 0, //The count of times that password used
  * <p/>
- * unique (siteid,id)); //Duplicate entries can not be registered with the same name as the name and ID of the site
+ * unique (siteid,id)); //Duplicate entries can not be registered with the same
+ * name as the name and ID of the site
  * 
  * 
  * @author SJ.Kim
- * @version 0.0.1
+ * @version 0.1.1
  */
 public class DB {
-	public static Connection connect() {
-		Connection conn = null;
+	Connection conn;
+	PreparedStatement stmt;
+	Statement smt;
+	ResultSet rs;
+	ArrayList<acdata> result = new ArrayList<acdata>();
+	acdata tmpdata = new acdata();
+	Aria aria = new Aria();
+	String otp_username;
+	String otp_SECRET_KEY;
+
+	public DB() {
+		connectDB();
+	}
+
+	protected void connectDB() {
 		try {
-			// db parameters
 			String url = "jdbc:sqlite:ext/main.db";
-			// create a connection to the database
 			conn = DriverManager.getConnection(url);
-			            
-			System.out.println("Connection to SQLite has been established.");  
+			System.out.println("Connection to SQLite has been established.");
+		} catch (SQLException e) {
+			System.err.println("Error : DB Connect - Driver Manager");
+		}
+	}
+
+	public boolean getMember() { // 유저 정보 갱신
+		boolean isSuccess = false;
+		try {
+
+			stmt = conn.prepareStatement("select rowid,* from Main"); // 쿼리문 전송
+			rs = stmt.executeQuery();
+
+			while (rs.next()) { // result set이 더 있을 경우
+				acdata data1 = new acdata();
+				data1.setIndex(rs.getInt("rowid"));
+				data1.setSiteid(rs.getString("siteid"));
+				data1.setKeyword(rs.getString("keyword"));
+				data1.setId(rs.getString("id"));
+				data1.setPw(rs.getString("pw"));
+				data1.setMadedate(rs.getString("makedate"));
+
+				System.out.println(rs.getInt("rowid") + "\t" + rs.getString("siteid") + "\t" + rs.getString("keyword")
+						+ "\t" + rs.getString("id") + "\t" + rs.getString("pw") + "\t" + rs.getString("makedate"));
+				result.add(data1);
+			}
+			isSuccess = true;
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+		return isSuccess;
+	}
+
+	public boolean search(String word) { // 검색 기능
+		boolean isSuccess = false;
+		try {
+			System.out.println(word);
+			stmt = conn.prepareStatement("SELECT rowid,*" + "FROM Main WHERE siteid like ? or keyword like ? order by count desc"); // 쿼리문
+																												// 전송
+			stmt.setString(1, '%' + word + '%');
+			stmt.setString(2, '%' + word + '%');
+			rs = stmt.executeQuery();
+
+			while (rs.next()) { // result set이 더 있을 경우
+				acdata data1 = new acdata();
+				data1.setIndex(rs.getInt("rowid"));
+				data1.setSiteid(rs.getString("siteid"));
+				data1.setKeyword(rs.getString("keyword"));
+				data1.setId(rs.getString("id"));
+				data1.setPw(aria.Decrypt(rs.getString("pw")));
+				data1.setMadedate(rs.getString("makedate"));
+				data1.setcount(rs.getInt("count"));
+
+				System.out.println(rs.getInt("rowid") + "\t" + rs.getString("siteid") + "\t" + rs.getString("keyword")
+						+ "\t" + rs.getString("id") + "\t" + rs.getString("pw") + "\t" + rs.getString("makedate")+
+						"\t" + rs.getInt("count"));
+				result.add(data1);
+			}
+			isSuccess = true;
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+		return isSuccess;
+	}
+	
+	public boolean search(int rowid) { // 유저 정보 갱신
+		boolean isSuccess = false;
+		try {
+			System.out.println(rowid);
+			stmt = conn.prepareStatement("SELECT rowid,*" + "FROM Main WHERE rowid = ?"); // 쿼리문전송
+																				
+			stmt.setInt(1, rowid);
+			rs = stmt.executeQuery();
+
+			// result set이 더 있을 경우
+			tmpdata.setIndex(rs.getInt("rowid"));
+			tmpdata.setSiteid(rs.getString("siteid"));
+			tmpdata.setKeyword(rs.getString("keyword"));
+			tmpdata.setId(rs.getString("id"));
+			tmpdata.setPw(aria.Decrypt(rs.getString("pw")));
+			tmpdata.setMadedate(rs.getString("makedate"));
+			tmpdata.setcount(rs.getInt("count"));
+
+			System.out.println(rs.getInt("rowid") + "\t" + rs.getString("siteid") + "\t" + rs.getString("keyword")
+					+ "\t" + rs.getString("id") + "\t" + rs.getString("pw") + "\t" + rs.getString("makedate")+
+					"\t" + rs.getInt("count"));
+			isSuccess = true;
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+		return isSuccess;
+	}
+	
+
+	protected boolean insertAccount(String siteid, String keyword, String id, String pw, String makedate) {
+		boolean isSuccess = true;
+		String sql = "INSERT INTO Main(siteid, keyword, id, pw, makedate) VALUES(?,?,?,?,?)";
+		try {
+			// String sql = "insert into Main(siteid,id,pw) values(\'" + siteid + "\', \'" +
+			// id + "\', \'" + pw + "\');";
+			stmt = conn.prepareStatement(sql);
+			stmt.setString(1, siteid);
+			stmt.setString(2, keyword);
+			stmt.setString(3, id);
+			stmt.setString(4, aria.Encrypt(pw));
+			stmt.setString(5, makedate);
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			System.err.println("Error : Insert Account\n");
+			System.out.println(e.getMessage());
+			if(e.getMessage().contains("UNIQUE")) //무결성 에러 발생시 출력하는 메세지
+			{
+				JOptionPane.showMessageDialog(null, "항목이 이미 등록되어 있습니다.");
+			}
+			isSuccess = false;
+		}
+		return isSuccess;
+	}
+
+	
+	protected boolean deleteAccount(int rowid) {
+		boolean isSuccess = true;
+		String sql = "DELETE FROM Main WHERE rowid = ?";
+		try {
+			// set the corresponding param
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, rowid);
+			System.out.println(sql);
+			// execute the delete statement
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			System.err.println("Error : Can't delete\n");
+			System.out.println(e.getMessage());
+			isSuccess = false;
+		}
+		return isSuccess;
+	}
+	
+	protected boolean updateAccount(String siteid, String keyword, String id, String pw, int index) {
+		boolean isSuccess = true;
+		String sql = "update Main set siteid = ?, keyword = ?, id = ?, pw = ?, makedate = current_date where rowid = ?";
+		try {
+			System.out.println(sql);
+			stmt = conn.prepareStatement(sql);
+			stmt.setString(1, siteid);
+			stmt.setString(2, keyword);
+			stmt.setString(3, id);
+			stmt.setString(4, aria.Encrypt(pw));
+			stmt.setInt(5, index);
+			stmt.executeUpdate();
+		}catch(SQLException e) {
+			System.err.println("Error : Can't update\n");
+			System.out.println(e.getMessage());
+			isSuccess = false;
+		}
+		return isSuccess;
+	}
+	
+	protected boolean updateAccount(int index) {
+		boolean isSuccess = true;
+		String sql = "update Main set count = count+1 where rowid = ?";
+		try {
+			System.out.println(sql);
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, index);
+			stmt.executeUpdate();
+		}catch(SQLException e) {
+			System.err.println("Error : Can't update count\n");
+			System.out.println(e.getMessage());
+			isSuccess = false;
+		}
+		return isSuccess;
+	}
+    /**
+     * This method save register information in database.
+     * @param username
+     * @param secretcode
+     */
+	protected boolean registerInfo(String username, String secretcode) {
+		boolean isSuccess = true;
+		String sql = "update Google_Auth set secretcode = ?, username = ? where rowid = 1";
+		try {
+			System.out.println(sql);
+			stmt = conn.prepareStatement(sql);
+			stmt.setString(1, aria.Encrypt(secretcode));
+			stmt.setString(2, username);
+			stmt.executeUpdate();
+		}catch(SQLException e) {
+			System.err.println("Error : Can't update otp info\n");
+			System.out.println(e.getMessage());
+			isSuccess = false;
+		}
+		return isSuccess;
+    }
+	/** connect to db for loading Information to login
+     * 
+     * @param conn
+     * @param stat
+     * @param rs
+     */
+	protected void loadInfo() {
+		boolean isSuccess = true;
+		try {
+			smt = conn.createStatement();
+			rs = smt.executeQuery("select * from Google_Auth");
+			otp_username = rs.getString("username");
+			otp_SECRET_KEY = aria.Decrypt(rs.getString("secretcode"));
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-        } 
-		/*finally {
-			try {
-					if (conn != null) {
-					conn.close();
-				}
-			} catch (SQLException ex) {
-				System.out.println(ex.getMessage());
-			}
-		}*/
-		return conn;
-	}
-	
-	public static void main(String[] args) {
+            isSuccess = false;
+        }
+    }
 
-		select.selectAll();
-		/*insert.insert(siteid,keyword,id,pw,madedate);*/
-	}
-}
-/**
- * Connect to the database
- * Insert a new row into the main table
- * <p/>
- * INSERT INTO Main(siteid, keyword, id, pw, makedate) VALUES(?,?,?,?,?)
- * <p/>
- * sqlite doesn't allow registering 'null' value.
- * To register a value you do not know, simply remove that and register the item.
- * <p/>
- * To do this, method recieve the object that include the account data.
- * and use 'if' construction to analysis what the objects have.
- * Based on analyzed results select the method of registration.
- * <p/>
- * @author SJ.Kim
- *
- */
-class insert extends DB{
-	
-	/*public insert(acdata new_data) {
-		siteid = new_data.getSiteid();
-		keyword = new_data.getKeyword();
-		id = new_data.getId();
-		pw = new_data.getPw();
-		madedate = new_data.getMadedate();
-		if()
-	}*/
-    /**
-     * Connect to the database
-	 * Insert a new row into the main table
-     *
-     * @param acdata
-     */
-	public static void insert(acdata data) {
-		String sql = "INSERT INTO Main(siteid, keyword, id, pw, makedate) VALUES(?,?,?,?,?)";
-		try (Connection conn = DB.connect();
-				PreparedStatement pstmt = conn.prepareStatement(sql)) {
-					/*pstmt.setString(1, siteid);
-					pstmt.setString(2, keyword);
-					pstmt.setString(3, id);
-					pstmt.setString(4, pw);
-					pstmt.setString(5, madedate);*/
-					pstmt.executeUpdate();
+	protected void closeDB() {
+		try {
+			if (conn != null)
+				conn.close();
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			System.err.println("Error : DB Close");
 		}
 	}
-	/**
-     * Connect to the database
-	 * Insert a new row into the main table
-     *
-     * @param siteid
-     * @param id
-     * @param pw
-     * @param madedate
-     */
-	public insert(String siteid, String id, String pw, String madedate) {
-		String sql = "INSERT INTO Main(siteid, id, pw, madedate) VALUES(?,?,?,?)";
-     
-			try (Connection conn = DB.connect();
-					PreparedStatement pstmt = conn.prepareStatement(sql)) {
-				pstmt.setString(1, siteid);
-				pstmt.setString(2, id);
-				pstmt.setString(3, pw);
-				pstmt.setString(4, madedate);
-				pstmt.executeUpdate();
-			} catch (SQLException e) {
-				System.out.println(e.getMessage());
-			}
-	}
-    /**
-     * Connect to the database
-	 * Insert a new row into the main table
-     *
-     * @param siteid
-     * @param id
-     * @param pw
-     */
-	public insert(String siteid, String id, String pw) {
-		String sql = "INSERT INTO Main(siteid, id, pw) VALUES(?,?,?)";
-			try (Connection conn = DB.connect();
-					PreparedStatement pstmt = conn.prepareStatement(sql)) {
-						pstmt.setString(1, siteid);
-						pstmt.setString(2, id);
-						pstmt.setString(3, pw);
-						pstmt.executeUpdate();
-			} catch (SQLException e) {
-				System.out.println(e.getMessage());
-			}
-	}
-}
-/**
- * SELECT rowid,* FROM Main WHERE siteid like ? or keyword like ?
- * <p/>
- * Get the row whose keyword same with specific site's name or keyword
- * or get the row whose number same with specific number
- * <p/>
- * The data that you import from the database is stored in the object.
- * And these objects are stored in arraylist to transfer to other method.
- * <p/>
- * when query end, the query results are stored in 'result set'.
- * but the 'result set' are terminated when method end.
- * to solve this problem, put the result set's data in the ArrayList .
- * <p/>
- * @author SJ.Kim
- *
- */
-class select extends DB {
-	/**
-     * Connect to the database
-     * select all rows in the test table
-     */
-	public static ArrayList<acdata> selectAll(){
-		ArrayList<acdata> result = new ArrayList<acdata>();
-		String sql = "SELECT rowid, siteid, keyword, id, pw, makedate FROM Main";
-		try (Connection conn = DB.connect();
-				Statement stmt  = conn.createStatement();
-				ResultSet rs    = stmt.executeQuery(sql)){
-			// loop through the result set
-			while (rs.next()) {
-				acdata data1 = new acdata();
-				System.out.println(rs.getInt("rowid") +  "\t" + 
-								   rs.getString("siteid") + "\t" +
-								   rs.getString("keyword") + "\t" +
-								   rs.getString("id") + "\t" +
-								   rs.getString("pw") + "\t" +
-								   rs.getString("makedate"));
-				data1.setIndex(rs.getInt("rowid"));
-				data1.setSiteid(rs.getString("siteid"));
-				data1.setKeyword(rs.getString("keyword"));
-				data1.setId(rs.getString("id"));
-				data1.setPw(rs.getString("pw"));
-				data1.setMadedate(rs.getString("makedate"));
-				result.add(data1);
-			}
-			
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-		}
-		return result;
-	}
-	/**
-	* Get the test whose keyword same with specific siteid or keyword
-	* @param keyword
-	*/
-	public static ArrayList<acdata> search(String word){
-							String sql = "SELECT rowid,*"
-							+ "FROM Main WHERE siteid like ? or keyword like ?";
-		ArrayList<acdata> result = new ArrayList<acdata>();
-		try (Connection conn = DB.connect();
-			PreparedStatement pstmt  = conn.prepareStatement(sql)){
-            
-			// set the value
-			pstmt.setString(1,'%'+word+'%');
-			pstmt.setString(2,'%'+word+'%');
-			//
-			ResultSet rs  = pstmt.executeQuery();
-            
-			// loop through the result set
-			while (rs.next()) {
-				acdata data1 = new acdata();
-				System.out.println(rs.getString("siteid") +  "\t" + 
-								   rs.getString("keyword") + "\t" +
-								   rs.getString("id") + "\t" +
-								   rs.getString("pw") + "\t" +
-								   rs.getString("makedate"));
-				data1.setIndex(rs.getInt("rowid"));
-				data1.setSiteid(rs.getString("siteid"));
-				data1.setKeyword(rs.getString("keyword"));
-				data1.setId(rs.getString("id"));
-				data1.setPw(rs.getString("pw"));
-				data1.setMadedate(rs.getString("makedate"));
-				result.add(data1);
-			}
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-		}
-		return result;
-	}
-	/**
-	* Get the Main whose number same with specific number
-	* @param no
-	*/	
-	public void selectone(int no){
-		String sql = "SELECT ? FROM Main";
-		try (Connection conn = DB.connect();
-				PreparedStatement pstmt  = conn.prepareStatement(sql)){
-				// set the value
-				pstmt.setInt(1,no);
-				//
-				ResultSet rs  = pstmt.executeQuery();
-			while (rs.next()) {
-				System.out.println(rs.getString("siteid") +  "\t" + 
-								   rs.getString("keyword") + "\t" +
-								   rs.getString("id") + "\t" +
-								   rs.getString("pw") + "\t" +
-								   rs.getString("madedate"));
-			}
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-		}
-	}
-	public ArrayList<acdata> rs2vector(ResultSet rs) {
-		return null;
-	}
-}
-/**
- * Update data of a warehouse specified by the row number
- * @author SJ.Kim
- */
-class update extends DB {
-		/**
-	     * Update data of a warehouse specified by the id
-	     *
-	     * @param id
-	     * @param name name of the test
-	     * @param capacity capacity of the test
-	     */
-		public void update(int rowid, String keyw, String pw) {
-			String sql = "UPDATE Main SET keyword = ?, pw = ? , "
-						  + "madedate = current_date "
-						  + "WHERE rowid = ?";
-	 
-			try (Connection conn = DB.connect();
-					PreparedStatement pstmt = conn.prepareStatement(sql)) {
-				// set the corresponding param
-				pstmt.setString(1, keyw);
-	            pstmt.setString(2, pw);
-	            pstmt.setInt(3, rowid);
-	            // update 
-	            pstmt.executeUpdate();
-			} catch (SQLException e) {
-				System.out.println(e.getMessage());
-			}
-		}	 
-}
-/**
- * DELETE FROM Main WHERE rowid = ?
- * Delete a test specified by the rowid
- * @author SJ.Kim
- */
-class delete extends DB {
-	/**
-	 * DELETE FROM Main WHERE rowid = ?
-	 * Delete a test specified by the rowid
-	 *
-	 * @param rowid
-	 */
-	public void delete(int rowid) {
-		String sql = "DELETE FROM Main WHERE rowid = ?";
-	     
-		try (Connection conn = DB.connect();
-				PreparedStatement pstmt = conn.prepareStatement(sql)) {
-	     
-			// set the corresponding param
-			pstmt.setInt(1, rowid);
-			// execute the delete statement
-			pstmt.executeUpdate();
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-		}
-	}   
 }
