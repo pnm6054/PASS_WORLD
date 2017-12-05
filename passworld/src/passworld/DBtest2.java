@@ -40,6 +40,8 @@ public class DBtest2 {
 	ArrayList<acdata> result = new ArrayList<acdata>();
 	acdata tmpdata = new acdata();
 	Aria aria = new Aria();
+	String otp_username;
+	String otp_SECRET_KEY;
 
 	public DBtest2() {
 		connectDB();
@@ -207,23 +209,6 @@ public class DBtest2 {
 		return isSuccess;
 	}
 	
-	protected boolean registerInfo(String username, String secretcode) {
-		boolean isSuccess = true;
-		String sql = "update Google_Auth set secretcode = ?, username = ? where rowid = 1";
-		try {
-			System.out.println(sql);
-			stmt = conn.prepareStatement(sql);
-			stmt.setString(1, secretcode);
-			stmt.setString(2, username);
-			stmt.executeUpdate();
-		}catch(SQLException e) {
-			System.err.println("Error : Can't update otp info\n");
-			System.out.println(e.getMessage());
-			isSuccess = false;
-		}
-		return isSuccess;
-    }
-	
 	protected boolean updateAccount(int index) {
 		boolean isSuccess = true;
 		String sql = "update Main set count = count+1 where rowid = ?";
@@ -239,15 +224,40 @@ public class DBtest2 {
 		}
 		return isSuccess;
 	}
-	
-	private void loadInfo(String username, String SECRET_KEY) {
+    /**
+     * This method save register information in database.
+     * @param username
+     * @param secretcode
+     */
+	protected boolean registerInfo(String username, String secretcode) {
 		boolean isSuccess = true;
 		String sql = "update Google_Auth set secretcode = ?, username = ? where rowid = 1";
 		try {
+			System.out.println(sql);
+			stmt = conn.prepareStatement(sql);
+			stmt.setString(1, aria.Encrypt(secretcode));
+			stmt.setString(2, username);
+			stmt.executeUpdate();
+		}catch(SQLException e) {
+			System.err.println("Error : Can't update otp info\n");
+			System.out.println(e.getMessage());
+			isSuccess = false;
+		}
+		return isSuccess;
+    }
+	/** connect to db for loading Information to login
+     * 
+     * @param conn
+     * @param stat
+     * @param rs
+     */
+	protected void loadInfo() {
+		boolean isSuccess = true;
+		try {
 			smt = conn.createStatement();
 			rs = smt.executeQuery("select * from Google_Auth");
-			username = rs.getString("username");
-			SECRET_KEY = rs.getString("secretcode");
+			otp_username = rs.getString("username");
+			otp_SECRET_KEY = aria.Decrypt(rs.getString("secretcode"));
         } catch (SQLException e) {
             System.out.println(e.getMessage());
             isSuccess = false;

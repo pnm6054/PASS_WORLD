@@ -16,7 +16,7 @@ public class Aria {
 	/**
 	 * @param key the key for encrypted
 	 */
-	static String key = "DefaultAriakey";
+	private static String key = "DefaultAriakey";
 	
 	private int[][] S = {
 			// S-box type 1

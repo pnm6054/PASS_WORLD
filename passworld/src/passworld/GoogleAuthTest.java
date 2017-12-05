@@ -58,7 +58,10 @@ public class GoogleAuthTest
     
     
     public GoogleAuthTest() {
-    	loadInfo();
+    	
+    	db.loadInfo();
+    	username = db.otp_username;
+    	SECRET_KEY = db.otp_SECRET_KEY;
     	setupMockCredentialRepository();
     }
    
@@ -148,59 +151,6 @@ public class GoogleAuthTest
         System.out.println("Check VALIDATION_CODE = " + isCodeValid);
         
         return isCodeValid;
-    }
-    
-    /** connect to db for loading Information to login
-     * 
-     * @param conn
-     * @param stat
-     * @param rs
-     */
-    private void loadInfo() {
-    	Connection conn = null;
-    	Statement stat = null;
-    	ResultSet rs = null;
-		try {
-			// db parameters
-			String url = "jdbc:sqlite:ext/main.db";
-			// create a connection to the database
-			conn = DriverManager.getConnection(url);
-			            
-			System.out.println("Connection to SQLite has been established.");
-			
-			stat = conn.createStatement();
-			rs = stat.executeQuery("select * from Google_Auth");
-			username = rs.getString("username");
-			SECRET_KEY = rs.getString("secretcode");
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-    }
-    
-    /**
-     * This method save register information in database.
-     * @param username
-     * @param secretcode
-     */
-    private static void registerInfo(String username, String secretcode) {
-    	Connection conn = null;
-    	PreparedStatement pstat = null;
-    	int result = 0;
-		try {
-			// db parameters
-			String url = "jdbc:sqlite:ext/main.db";
-			// create a connection to the database
-			conn = DriverManager.getConnection(url);
-			            
-			System.out.println("Connection to SQLite has been established.");
-			
-			pstat = conn.prepareStatement("update Google_Auth set secretcode = ?, username = ? where rowid = 1");
-			pstat.setString(1, secretcode);
-			pstat.setString(2, username);
-			result = pstat.executeUpdate();
-        } catch (SQLException e) {
-            System.out.println("계정 등록 에러" + e.getMessage());
-        }
     }
 }
     class QRcode extends JDialog implements MouseListener{
