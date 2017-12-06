@@ -16,6 +16,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.Color;
 
@@ -53,9 +54,8 @@ public class Register extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		GoogleAuthTest OTP = new GoogleAuthTest();
 		setTitle("PASS WORLD");
-		setIconImage(Toolkit.getDefaultToolkit().getImage("src/1.png"));
+		setIconImage(Toolkit.getDefaultToolkit().getImage("c:/reso/1.png"));
 		
 		JLabel name = new JLabel("¿Ã∏ß");
 		name.setFont(new Font("±º∏≤", Font.PLAIN, 17));
@@ -110,5 +110,10 @@ public class Register extends JFrame {
 		manual.setFont(new Font("±º∏≤", Font.PLAIN, 17));
 		manual.setBounds(58, 256, 247, 15);
 		contentPane.add(manual);
+		
+		ImageIcon image_man = new ImageIcon("c:/reso/3.jpg");
+		JLabel manual_img = new JLabel("",image_man,JLabel.CENTER);
+		manual_img.setBounds(36,275,355,321);
+		contentPane.add(manual_img);
 	}
 }

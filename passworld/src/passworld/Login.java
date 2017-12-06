@@ -17,6 +17,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.regex.Pattern;
 
 import javax.swing.JTextField;
 import javax.swing.JTextArea;
@@ -36,30 +37,16 @@ public class Login extends JFrame {
 	private JPasswordField field_re_PW = new JPasswordField();
 	private JTextField field_mkdate = new JTextField();
 	private JButton btnsubmit = new JButton("확인");
+	private JTextArea safetycheck;
 	DB db = new DB();
-	/**
-	 * Launch the application.
-	 *//*
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Login frame = new Login();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}*/
-
+	private int safe_lv = 0;
 	/**
 	 * Create the frame.
 	 */
 	public Login() {
 		
 		setTitle("PASS WORLD");
-		setIconImage(Toolkit.getDefaultToolkit().getImage("src/1.png"));
+		setIconImage(Toolkit.getDefaultToolkit().getImage("c:/reso/1.png"));
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		Dimension d = getToolkit().getScreenSize();
 		setSize(450, 500);
@@ -85,6 +72,7 @@ public class Login extends JFrame {
 		Keyword.setFont(new Font("굴림", Font.PLAIN, 17));
 		Keyword.setBounds(65, 80, 100, 20);
 		Keyword.setHorizontalAlignment(JLabel.RIGHT);
+
 		
 		field_KW = new JTextArea(1,1);
 		field_KW.setBounds(175, 80, 154, 40);
@@ -123,8 +111,31 @@ public class Login extends JFrame {
 		
 		field_PW = new JPasswordField();
 		field_PW.setBounds(175, 160, 154, 21);
+		field_PW.addKeyListener(new KeyListener() {
+			public void keyPressed(KeyEvent e)
+			{
+				System.out.println(field_PW.getText().length());
+				switch(pwchecker()) {
+	        	case 0 : safetycheck.setText("위험 - 권장 비밀번호 길이는 8자리 이상입니다.\n(등록불가)"); 
+	        			safetycheck.setForeground(Color.red);
+	        		break;
+	        	case 1 : safetycheck.setText("경고 - 특수문자가 포함되지 않았습니다.\n(등록가능)"); 
+	        	safetycheck.setForeground(new Color(255,200,4));
+	        	break;
+	        	case 2 : safetycheck.setText("안전 - 안전한 비밀번호입니다.\n(등록가능"); 
+	        	safetycheck.setForeground(Color.green);
+	        	break;
+	        	}
+/*			        // tab키를 제외하고
+			        if(e.getKeyCode() != KeyEvent.VK_TAB) {
+			        	
+			        }*/
+			}
+			public void keyReleased(KeyEvent e) {}
+			public void keyTyped(KeyEvent e) {}
+		});
 		
-		JTextArea safetycheck = new JTextArea("naer");
+		safetycheck = new JTextArea("naer");
 		safetycheck.setBounds(175, 190, 154, 40);
 		safetycheck.setCaretPosition(field_KW.getText().length());
 		safetycheck.setLineWrap(true);
@@ -145,9 +156,8 @@ public class Login extends JFrame {
 		JButton pw_eq = new JButton("일치여부");
 		pw_eq.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(PW.getText().equals(re_PW.getText())){
+				if(field_PW.getText().equals(field_re_PW.getText())){
 					JOptionPane.showMessageDialog(null, "비밀번호 일치");
-					dispose();
 				}else {
 					JOptionPane.showMessageDialog(null, "비밀번호 불일치");
 				}
@@ -173,23 +183,48 @@ public class Login extends JFrame {
 	
 		btnsubmit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(field_PW.getText().toString().length()!=0 && field_ID.getText().toString().length()!=0 && field_SN.getText().toString().length()!=0) {
-					if(field_mkdate.getText().toString().length()==10 || field_mkdate.getText().toString().length()==0) {
-						if(db.insertAccount(field_SN.getText(), field_KW.getText(), field_ID.getText(), field_PW.getText(), field_mkdate.getText())==true) {
-							JOptionPane.showMessageDialog(null, "등록성공");
-							dispose();
-						}else {
-							JOptionPane.showMessageDialog(null, "등록실패");
+				if (field_PW.getText().toString().length() != 0 && field_ID.getText().toString().length() != 0
+						&& field_SN.getText().toString().length() != 0) {
+					if (field_PW.getText().equals(field_re_PW.getText())) {
+
+						if (field_mkdate.getText().toString().length() == 10
+								|| field_mkdate.getText().toString().length() == 0) {
+							if (!db.searchPw(field_PW.getText())) {
+								switch (JOptionPane.showConfirmDialog(null, "이미 등록하신 비밀번호 입니다.\n등록하시겠습니까?", "비밀번호 중복등록",
+										JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE)) {
+								case JOptionPane.YES_OPTION:
+									if (db.insertAccount(field_SN.getText(), field_KW.getText(), field_ID.getText(),
+											field_PW.getText(), field_mkdate.getText()) == true) {
+										JOptionPane.showMessageDialog(null, "등록성공");
+										dispose();
+									} else {
+										JOptionPane.showMessageDialog(null, "등록실패");
+									}
+									break;
+								}
+
+							} else {
+								if (db.insertAccount(field_SN.getText(), field_KW.getText(), field_ID.getText(),
+										field_PW.getText(), field_mkdate.getText()) == true) {
+									JOptionPane.showMessageDialog(null, "등록성공");
+									dispose();
+								} else {
+									JOptionPane.showMessageDialog(null, "등록실패");
+								}
+							}
+						} else {
+							JOptionPane.showMessageDialog(null, "YYYY-MM-DD형식으로 입력해주세요\n공백으로 입력시 현재 날짜가 저장됩니다.",
+									"ERROR", JOptionPane.ERROR_MESSAGE);
 						}
-					}else {
-						JOptionPane.showMessageDialog(null, "YYYY-MM-DD형식으로 입력해주세요\n공백으로 입력시 현재 날짜가 저장됩니다.", "ERROR", JOptionPane.ERROR_MESSAGE);
+					} else {
+						JOptionPane.showMessageDialog(null, "비밀번호 일치 여부 검사를 해주세요", "ERROR", JOptionPane.ERROR_MESSAGE);
 					}
-				}else {
+				} else {
 					JOptionPane.showMessageDialog(null, "필수 항목 미입력", "ERROR", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
-		
+
 		JButton btnGhkrdls = new JButton("취소");
 		btnGhkrdls.setBackground(new Color(255,139,139));
 		btnGhkrdls.setBounds(245, 380, 100, 30);
@@ -238,5 +273,19 @@ public class Login extends JFrame {
 			}
 		});
 		contentPane.add(btnsubmit);
+	}
+	private int pwchecker() {
+		if(field_PW.getText().length()>6) {
+			String specChar = "[0-9|a-z|A-Z|ㄱ-ㅎ|ㅏ-ㅣ|가-힝|]*";
+			if(!field_PW.getText().matches(specChar)) {
+		            System.out.println("일치~");
+		            safe_lv=2;
+		            return 2;
+		        }
+			safe_lv=1;
+			return 1;
+		}
+		safe_lv=0;
+		return 0;
 	}
 }

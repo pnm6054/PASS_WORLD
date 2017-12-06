@@ -123,13 +123,14 @@ public class DB {
 			System.out.println(pw);
 			stmt = conn.prepareStatement("SELECT rowid,*" + "FROM Main WHERE pw = ?"); // 쿼리문전송
 																				
-			stmt.setString(1, pw);
+			stmt.setString(1, aria.Encrypt(pw));
 			rs = stmt.executeQuery();
 			int i = 0;
 			while (rs.next()) { // result set이 더 있을 경우
 				i++;
 			}
-			if(i<2)	isSuccess = true;
+			System.out.println(i);
+			if(i<1)	isSuccess = true;
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
