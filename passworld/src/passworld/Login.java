@@ -142,11 +142,21 @@ public class Login extends JFrame {
 		field_re_PW = new JPasswordField();
 		field_re_PW.setBounds(175, 242, 154, 22);
 		
-		JLabel pw_eq = new JLabel("불일치");
-		pw_eq.setFont(new Font("굴림", Font.PLAIN, 17));
+		JButton pw_eq = new JButton("일치여부");
+		pw_eq.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(PW.getText().equals(re_PW.getText())){
+					JOptionPane.showMessageDialog(null, "비밀번호 일치");
+					dispose();
+				}else {
+					JOptionPane.showMessageDialog(null, "비밀번호 불일치");
+				}
+			}
+		});
 		pw_eq.setBounds(175, 270, 154, 20);
-		pw_eq.setForeground(Color.RED);
+		pw_eq.setBackground(new Color(255,139,139));
 		pw_eq.setHorizontalAlignment(JLabel.LEFT);
+		contentPane.add(pw_eq);
 		
 		JLabel makedate = new JLabel("등록일자");
 		makedate.setFont(new Font("굴림", Font.PLAIN, 17));
