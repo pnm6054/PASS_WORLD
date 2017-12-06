@@ -42,7 +42,7 @@ public class First extends JFrame {
 	public First() {
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setIconImage(Toolkit.getDefaultToolkit().getImage("ext/1.png"));
+		setIconImage(Toolkit.getDefaultToolkit().getImage("c:/reso/1.png"));
 		setTitle("PASS WORLD");
 		contentPane = new JPanel();
 		setContentPane(contentPane);
@@ -109,8 +109,11 @@ public class First extends JFrame {
 
 			// 로그인 성공이라면 매니져창 뛰우기
 			if (isLogin()) {
-				GUI_Main main = new GUI_Main(); // 메인창 메소드를 이용해 창뛰우기
-				main.main(null);
+				
+				 // 메인창 메소드를 이용해 창뛰우기
+				GUI_Main frame = new GUI_Main();
+				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+				frame.setVisible(true);
 				dispose();
 			}
 		} else {

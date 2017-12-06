@@ -132,7 +132,7 @@ public class GUI_Main extends JFrame {
 		search_field.add(keyword_field);
 
 
-		ImageIcon search = new ImageIcon("ext/2.PNG");
+		ImageIcon search = new ImageIcon("c:/reso/2.PNG");
 		JButton search_button = new JButton(search);
 		search_button.setPreferredSize(new Dimension(25, 25));
 		search_field.add(search_button);
@@ -249,13 +249,13 @@ public class GUI_Main extends JFrame {
 		func_field.add(deletion);
 	}
 
-	// public static GUI_Main main(String[] args)
+	/*// public static GUI_Main main(String[] args)
 	public static void main(String[] args) {
 		GUI_Main frame = new GUI_Main();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 		// return frame;
-	}
+	}*/
 	/*
 	class DefaultCellRenderer extends DefaultTableCellRenderer {
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
