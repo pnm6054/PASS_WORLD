@@ -7,6 +7,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -79,7 +81,16 @@ public class Register extends JFrame {
 		
 		btnregister.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				secret_field.setText(GoogleAuthTest.createCredentialsForUser(name_Field.getText(),account_Field.getText())); //secretcode 텍스트 필드에 생성된 secret code 출력
+				if(name_Field.getText().toString().length()==0) {
+					JOptionPane.showMessageDialog(null, "이름을 입력해주세요", "ERROR", JOptionPane.ERROR_MESSAGE);
+				}else if(account_Field.getText().toString().length()==0 || !account_Field.getText().toString().contains("@")) {
+					JOptionPane.showMessageDialog(null, "정확한 이메일을 입력해주세요", "ERROR", JOptionPane.ERROR_MESSAGE);
+				}else {
+				try {secret_field.setText(GoogleAuthTest.createCredentialsForUser(name_Field.getText(),account_Field.getText())); //secretcode 텍스트 필드에 생성된 secret code 출력
+				}catch(IllegalArgumentException er){
+					JOptionPane.showMessageDialog(null, "에러 발생 - 재시도 해주세요", "ERROR_MESSAGE", JOptionPane.ERROR_MESSAGE);
+				}
+				}
 			}
 		});
 		contentPane.add(btnregister);

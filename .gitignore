@@ -4,6 +4,9 @@
 # Log file
 *.log
 
+# db file
+/passworld/ext/main.db
+
 # BlueJ files
 *.ctxt
 

@@ -7,22 +7,22 @@ import java.text.*;
 import java.util.*;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.plaf.ColorUIResource;
 import javax.swing.table.*;
 
 public class GUI_Main extends JFrame {
 	JPanel search_field = new JPanel();
 	JPanel table_Panel = new JPanel();
 	JPanel func_field = new JPanel();
-	DBtest2 db = new DBtest2();
+	DB db = new DB();
 	PageTableModel model;
 	JTable result_table;
 	Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 	JCheckBox pw_hider;
 	Calendar cal = Calendar.getInstance();
 	SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-	//Date toDay = format(cal.getTime());
 	
-
 	public GUI_Main()  {
 		super("PASS WORLD");
 		// setTitle("PASS WORLD");
@@ -41,6 +41,7 @@ public class GUI_Main extends JFrame {
 
 		model = new PageTableModel();
 		TableColumnModel columnModel = new DefaultTableColumnModel();
+		DefaultTableCellRenderer statusrenderer = new CellStatusRenderer();
 		TableCellRenderer renderer = new DefaultTableCellRenderer();
 		DefaultTableCellRenderer cbrenderer = new cellCheckRenderer();
 		DefaultTableCellRenderer pw_hider = new PW_Hider_Renderer();
@@ -49,7 +50,6 @@ public class GUI_Main extends JFrame {
 		JCheckBox box = new JCheckBox();
 		column.setCellRenderer(cbrenderer);
 		column.setCellEditor(new DefaultCellEditor(box));
-		//column.setCellEditor(checkEditor);
 		column.setHeaderValue(" ");
 		column.setPreferredWidth(5);
 		columnModel.addColumn(column);
@@ -72,6 +72,7 @@ public class GUI_Main extends JFrame {
 
 		column = new TableColumn(5);
 		column.setHeaderValue("등록일자");
+		column.setCellRenderer(statusrenderer);
 		columnModel.addColumn(column);
 
 		columnModel.setColumnSelectionAllowed(false); // true일시 (x,y)가 선택 false일시 (x)만 선택
@@ -107,7 +108,9 @@ public class GUI_Main extends JFrame {
 		// Add the scroll pane to this panel.
 		table_Panel.add(scrollPane);
 		scrollPane.setBackground(Color.WHITE);
-
+		scrollPane.getViewport().setBackground(Color.WHITE);
+		scrollPane.setPreferredSize(new Dimension(getWidth()-30, getHeight()-100));
+		
 		JTextField keyword_field = new JTextField("", 20);
 		keyword_field.setBounds(55, 44, 259, 24);
 		keyword_field.setColumns(10);
@@ -129,9 +132,9 @@ public class GUI_Main extends JFrame {
 		search_field.add(keyword_field);
 
 
-		ImageIcon search = new ImageIcon("src/2.PNG");
+		ImageIcon search = new ImageIcon("ext/2.PNG");
 		JButton search_button = new JButton(search);
-		search_button.setBounds(328, 43, 25, 27);
+		search_button.setPreferredSize(new Dimension(25, 25));
 		search_field.add(search_button);
 		search_button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -177,8 +180,7 @@ public class GUI_Main extends JFrame {
 		JButton modification = new JButton("수정");
 		modification.setBackground(new Color(255, 139, 139));
 		modification.setPreferredSize(new Dimension(80, 27));
-		// modification.setBorder(BorderFactory.createMatteBorder(5,5,5,5,
-		// Color.BLACK));
+		//modification.setBorder(BorderFactory.createMatteBorder(5,5,5,5,Color.BLACK));
 		modification.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int i = 0; //while문의 반복을 위한 변수
@@ -225,19 +227,21 @@ public class GUI_Main extends JFrame {
 		// deletion.setBorder(BorderFactory.createMatteBorder(5,5,5,5, Color.BLACK));
 		deletion.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//ArrayList<Integer> rowid_list = new ArrayList<Integer>();
-				int i = 0;
-				int j = 0;
-				while( i<db.result.size()) {
-					if(db.result.get(i).isSelected==true) {
-						j++;
-						System.out.println(db.result.get(i).getIndex());
-						db.deleteAccount(db.result.get(i).getIndex());
+				int choice = JOptionPane.showConfirmDialog(null, "삭제된 항목은 복구할 수 없습니다.\n삭제하시겠습니까?", "경고", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+				if(choice==0){
+					int i = 0;
+					int j = 0;
+					while( i<db.result.size()) {
+						if(db.result.get(i).isSelected==true) {
+							j++;
+							System.out.println(db.result.get(i).getIndex());
+							db.deleteAccount(db.result.get(i).getIndex());
+						}
+						System.out.println(db.result.get(i).getIndex() + " "+ db.result.get(i).isSelected +" "+ db.result.get(i++).getSiteid());
 					}
-				System.out.println(db.result.get(i).getIndex() + " "+ db.result.get(i).isSelected +" "+ db.result.get(i++).getSiteid());
-				}
-				JOptionPane.showMessageDialog(null, j + "개 항목 삭제");
-				System.out.println("-----------------");
+					JOptionPane.showMessageDialog(null, j + "개 항목 삭제");
+					System.out.println("-----------------");
+					}
 			}
 		});
 		func_field.add(registration);
@@ -252,9 +256,59 @@ public class GUI_Main extends JFrame {
 		frame.setVisible(true);
 		// return frame;
 	}
-	
+	/*
+	class DefaultCellRenderer extends DefaultTableCellRenderer {
+		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
+				int row, int column) {
+			if()
+			dtcr.setBackground(Color.red);
+	}
+*/
+	class CellStatusRenderer extends DefaultTableCellRenderer {
 
-
+		Date today = new Date();
+			private JLabel label ;
+		    /**
+		     * 4XX대 코드에서 보여줄 글자색
+		     */
+		    private ColorUIResource rs = new ColorUIResource(0xff, 0x0, 0x0);
+		    //private ColorUIResource rs300 = new ColorUIResource(0xaa, 0x5a, 0xff);
+		    
+		    public CellStatusRenderer(){
+		        this.label = new JLabel();
+		        this.label.setOpaque(true);
+		        this.label.setBorder(new EmptyBorder(new Insets(5, 5, 5, 5)));
+		        System.out.println("created StatusCodeRenderer");
+		    }
+		    
+		    @Override
+		    public Component getTableCellRendererComponent(JTable table, Object value,
+		            boolean isSelected, boolean hasFocus, int row, int column) {
+		        Color fg = UIManager.getColor("Table.foreground");
+		        Color bg = UIManager.getColor("Table.background");
+		        try {
+		        Date date_gen;
+					date_gen = formatter.parse(db.result.get(row).getMadedate());
+				
+		        int betweendays = (int) ((today.getTime()-date_gen.getTime())/(24 * 60 * 60 * 1000));
+		        if ( betweendays >= 60 ){
+		            fg = rs;
+		        }
+		       /* else if ( betweendays >= 0){
+		            fg = rs300;
+		        }*/
+		        } catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		        label.setBackground(bg);
+		        label.setForeground(fg);
+		        label.setText(value.toString());
+		        label.setFont(table.getFont());
+		        return label;
+		    }
+		
+	}
 	
 	class cellCheckRenderer extends DefaultTableCellRenderer {
 
@@ -269,18 +323,19 @@ public class GUI_Main extends JFrame {
 
 		}
 	}
+	
 	class PW_Hider_Renderer extends DefaultTableCellRenderer { //비밀번호 부분을 가려주는 라벨 생성
 
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
 				int row, int column) {
 
 			JLabel hided_pw = new JLabel("************");
+			
 
 			return hided_pw;
 
 		}
 	}
-	
 	
 	class PageTableModel extends AbstractTableModel {
 		private ArrayList<acdata> data;
@@ -302,7 +357,7 @@ public class GUI_Main extends JFrame {
 		}
 
 		public boolean isCellEditable(int row, int col) {
-			if (col == 0 || col == 4) {
+			if (col == 0) {
 				return true;
 			}
 			return false;
@@ -329,13 +384,4 @@ public class GUI_Main extends JFrame {
 			}
 		}
 	}
-
-	class CompareDates {
-		public boolean isFinished(String generation_date) throws ParseException {
-			Date product_end = formatter.parse(generation_date);
-			Date current = new Date();
-			return current.after(product_end);
-		}
-	}
-
 }

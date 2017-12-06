@@ -42,7 +42,7 @@ public class First extends JFrame {
 	public First() {
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setIconImage(Toolkit.getDefaultToolkit().getImage("src/1.png"));
+		setIconImage(Toolkit.getDefaultToolkit().getImage("ext/1.png"));
 		setTitle("PASS WORLD");
 		contentPane = new JPanel();
 		setContentPane(contentPane);
@@ -97,11 +97,12 @@ public class First extends JFrame {
 
 	}
 
-	public static final int DEFAULT_WIDTH = 430;
-	public static final int DEFAULT_HEIGHT = 250;
+	private static final int DEFAULT_WIDTH = 430;
+	private static final int DEFAULT_HEIGHT = 250;
 
 	public void isLoginCheck() {
 		OTP = new GoogleAuthTest();
+		try {
 		if (OTP.authoriseUser(passwordField.getText())) {
 			JOptionPane.showMessageDialog(null, "Success");
 			bLoginCheck = true;
@@ -116,11 +117,14 @@ public class First extends JFrame {
 			JOptionPane.showMessageDialog(null, "Faild"); // otp코드 미일치시 메세지 출력
 			passwordField.setText(""); // otp코드 미일치시 초기화
 		}
+		}catch(NumberFormatException e) {
+			JOptionPane.showMessageDialog(null,"숫자를 입력해주세요","ERROR",JOptionPane.ERROR_MESSAGE); //미입력 혹은 문자를 입력했을때
+		}
 	}
 
 	// mainProcess와 연동
 	public void setMain(test_4all main) {
-		this.main = main;
+		this.main = main;		
 	}
 
 	public boolean isLogin() {
