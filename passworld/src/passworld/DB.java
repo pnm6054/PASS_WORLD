@@ -57,34 +57,7 @@ public class DB {
 		}
 	}
 
-	public boolean getMember() { // 유저 정보 갱신
-		boolean isSuccess = false;
-		try {
-
-			stmt = conn.prepareStatement("select rowid,* from Main"); // 쿼리문 전송
-			rs = stmt.executeQuery();
-
-			while (rs.next()) { // result set이 더 있을 경우
-				acdata data1 = new acdata();
-				data1.setIndex(rs.getInt("rowid"));
-				data1.setSiteid(rs.getString("siteid"));
-				data1.setKeyword(rs.getString("keyword"));
-				data1.setId(rs.getString("id"));
-				data1.setPw(rs.getString("pw"));
-				data1.setMadedate(rs.getString("makedate"));
-
-				System.out.println(rs.getInt("rowid") + "\t" + rs.getString("siteid") + "\t" + rs.getString("keyword")
-						+ "\t" + rs.getString("id") + "\t" + rs.getString("pw") + "\t" + rs.getString("makedate"));
-				result.add(data1);
-			}
-			isSuccess = true;
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-		}
-		return isSuccess;
-	}
-
-	public boolean search(String word) { // 검색 기능
+	protected boolean search(String word) { // 검색 기능
 		boolean isSuccess = false;
 		try {
 			System.out.println(word);
@@ -116,7 +89,7 @@ public class DB {
 		return isSuccess;
 	}
 	
-	public boolean search(int rowid) { // 유저 정보 갱신
+	protected boolean search(int rowid) { // 유저 정보 갱신
 		boolean isSuccess = false;
 		try {
 			System.out.println(rowid);
@@ -144,6 +117,24 @@ public class DB {
 		return isSuccess;
 	}
 	
+	protected boolean searchPw(String pw) { // 동일 비밀번호 여부 검색
+		boolean isSuccess = false;
+		try {
+			System.out.println(pw);
+			stmt = conn.prepareStatement("SELECT rowid,*" + "FROM Main WHERE pw = ?"); // 쿼리문전송
+																				
+			stmt.setString(1, pw);
+			rs = stmt.executeQuery();
+			int i = 0;
+			while (rs.next()) { // result set이 더 있을 경우
+				i++;
+			}
+			if(i<2)	isSuccess = true;
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+		return isSuccess;
+	}
 
 	protected boolean insertAccount(String siteid, String keyword, String id, String pw, String makedate) {
 		boolean isSuccess = true;

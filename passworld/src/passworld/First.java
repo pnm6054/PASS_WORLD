@@ -97,8 +97,8 @@ public class First extends JFrame {
 
 	}
 
-	public static final int DEFAULT_WIDTH = 430;
-	public static final int DEFAULT_HEIGHT = 250;
+	private static final int DEFAULT_WIDTH = 430;
+	private static final int DEFAULT_HEIGHT = 250;
 
 	public void isLoginCheck() {
 		OTP = new GoogleAuthTest();

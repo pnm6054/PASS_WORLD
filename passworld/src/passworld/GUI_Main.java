@@ -227,18 +227,21 @@ public class GUI_Main extends JFrame {
 		// deletion.setBorder(BorderFactory.createMatteBorder(5,5,5,5, Color.BLACK));
 		deletion.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int i = 0;
-				int j = 0;
-				while( i<db.result.size()) {
-					if(db.result.get(i).isSelected==true) {
-						j++;
-						System.out.println(db.result.get(i).getIndex());
-						db.deleteAccount(db.result.get(i).getIndex());
+				int choice = JOptionPane.showConfirmDialog(null, "삭제된 항목은 복구할 수 없습니다.\n삭제하시겠습니까?", "경고", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+				if(choice==0){
+					int i = 0;
+					int j = 0;
+					while( i<db.result.size()) {
+						if(db.result.get(i).isSelected==true) {
+							j++;
+							System.out.println(db.result.get(i).getIndex());
+							db.deleteAccount(db.result.get(i).getIndex());
+						}
+						System.out.println(db.result.get(i).getIndex() + " "+ db.result.get(i).isSelected +" "+ db.result.get(i++).getSiteid());
 					}
-				System.out.println(db.result.get(i).getIndex() + " "+ db.result.get(i).isSelected +" "+ db.result.get(i++).getSiteid());
-				}
-				JOptionPane.showMessageDialog(null, j + "개 항목 삭제");
-				System.out.println("-----------------");
+					JOptionPane.showMessageDialog(null, j + "개 항목 삭제");
+					System.out.println("-----------------");
+					}
 			}
 		});
 		func_field.add(registration);
@@ -268,7 +271,7 @@ public class GUI_Main extends JFrame {
 		    /**
 		     * 4XX대 코드에서 보여줄 글자색
 		     */
-		    private ColorUIResource rs400 = new ColorUIResource(0xff, 0x0, 0x0);
+		    private ColorUIResource rs = new ColorUIResource(0xff, 0x0, 0x0);
 		    //private ColorUIResource rs300 = new ColorUIResource(0xaa, 0x5a, 0xff);
 		    
 		    public CellStatusRenderer(){
@@ -289,7 +292,7 @@ public class GUI_Main extends JFrame {
 				
 		        int betweendays = (int) ((today.getTime()-date_gen.getTime())/(24 * 60 * 60 * 1000));
 		        if ( betweendays >= 60 ){
-		            fg = rs400;
+		            fg = rs;
 		        }
 		       /* else if ( betweendays >= 0){
 		            fg = rs300;
