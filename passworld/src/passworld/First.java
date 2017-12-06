@@ -9,7 +9,6 @@ import javax.swing.border.EmptyBorder;
 
 public class First extends JFrame {
 
-	private test_4all main;
 	private JPanel contentPane;
 	private JPasswordField passwordField;
 	boolean bLoginCheck = false;
@@ -123,11 +122,6 @@ public class First extends JFrame {
 		}catch(NumberFormatException e) {
 			JOptionPane.showMessageDialog(null,"숫자를 입력해주세요","ERROR",JOptionPane.ERROR_MESSAGE); //미입력 혹은 문자를 입력했을때
 		}
-	}
-
-	// mainProcess와 연동
-	public void setMain(test_4all main) {
-		this.main = main;		
 	}
 
 	public boolean isLogin() {
