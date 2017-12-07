@@ -46,7 +46,7 @@ public class DB {
 	 */
 	protected void connectDB() {
 		try {
-			String url = "jdbc:sqlite:./main.db";
+			String url = "jdbc:sqlite:ext/main.db";
 			conn = DriverManager.getConnection(url);
 			System.out.println("Connection to SQLite has been established.");
 		} catch (SQLException e) {

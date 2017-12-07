@@ -42,7 +42,7 @@ public class First extends JFrame {
 	public First() {
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setIconImage(Toolkit.getDefaultToolkit().getImage("./1.png"));
+		setIconImage(Toolkit.getDefaultToolkit().getImage("ext/1.png"));
 		setTitle("PASS WORLD");
 		contentPane = new JPanel();
 		setContentPane(contentPane);

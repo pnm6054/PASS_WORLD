@@ -42,7 +42,7 @@ public class Register extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		setTitle("PASS WORLD");
-		setIconImage(Toolkit.getDefaultToolkit().getImage("./1.png"));
+		setIconImage(Toolkit.getDefaultToolkit().getImage("ext/1.png"));
 		
 		JLabel name = new JLabel("¿Ã∏ß*");
 		name.setFont(new Font("±º∏≤", Font.PLAIN, 17));
