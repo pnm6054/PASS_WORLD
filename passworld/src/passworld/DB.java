@@ -7,24 +7,17 @@ import java.util.Vector;
 import javax.swing.JOptionPane;
 
 /**
- * connect to ext/main.db schema of main.db's table 'Main'
- * <p/>
+ * connect to ext/main.db schema of main.db's table 'Main'<p/>
  * CREATE TABLE Main ( siteid text not null collate nocase, //The name of the
- * site can not be blank. and They are not case-sensitive.
- * <p/>
+ * site can not be blank. and They are not case-sensitive.<p/>
  * keyword text default siteid collate nocase, // If the keyword is blank, place
- * the name of the site. and They are not case-sensitive.
- * <p/>
- * id text not null, // The name of the site can not be blank.
- * <p/>
+ * the name of the site. and They are not case-sensitive.<p/>
+ * id text not null, // The name of the site can not be blank.<p/>
  * pw text default 'UNKNOWN', //If the password is blank, place the String
- * 'UNKNOWN'.
- * <p/>
+ * 'UNKNOWN'.<p/>
  * makedate not null default current_date, //If the password is blank, database
- * place the date when registered.
- * <p/>
- * count int not null default 0, //The count of times that password used
- * <p/>
+ * place the date when registered.<p/>
+ * count int not null default 0, //The count of times that password used<p/>
  * unique (siteid,id)); //Duplicate entries can not be registered with the same
  * name as the name and ID of the site
  * 
@@ -42,11 +35,15 @@ public class DB {
 	Aria aria = new Aria();
 	String otp_username;
 	String otp_SECRET_KEY;
-
+	/**
+	 * 
+	 */
 	public DB() {
 		connectDB();
 	}
-
+	/**
+	 * 
+	 */
 	protected void connectDB() {
 		try {
 			String url = "jdbc:sqlite:./main.db";
@@ -221,6 +218,7 @@ public class DB {
 		}
 		return isSuccess;
 	}
+	
 	protected boolean resettable() {
 		boolean isSuccess = true;
 		String sql = "CREATE TABLE Main (siteid text not null collate nocase, keyword text default siteid collate nocase, id text not null, pw text default 'UNKNOWN', makedate not null default current_date, count int not null default 0, unique (siteid,id));";
@@ -240,8 +238,9 @@ public class DB {
 	
     /**
      * This method save register information in database.
-     * @param username
-     * @param secretcode
+     * @param username name of user
+     * @param secretcode secret code of user
+     * @return is Success
      */
 	protected boolean registerInfo(String username, String secretcode) {
 		boolean isSuccess = true;
@@ -262,9 +261,10 @@ public class DB {
     }
 	/** connect to db for loading Information to login
      * 
-     * @param conn
-     * @param stat
-     * @param rs
+     * @param conn connection of DB
+     * @param stat instance for instruction
+     * @param rs result set
+     * 
      */
 	protected void loadInfo() {
 		boolean isSuccess = true;

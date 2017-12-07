@@ -42,16 +42,16 @@ public class Register extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		setTitle("PASS WORLD");
-		setIconImage(Toolkit.getDefaultToolkit().getImage("c:/reso/1.png"));
+		setIconImage(Toolkit.getDefaultToolkit().getImage("./1.png"));
 		
-		JLabel name = new JLabel("이름");
+		JLabel name = new JLabel("이름*");
 		name.setFont(new Font("굴림", Font.PLAIN, 17));
 		name.setBounds(110, 50, 50, 27);
 		contentPane.add(name);
 		
-		JLabel account = new JLabel("계정명");
+		JLabel account = new JLabel("계정명*");
 		account.setFont(new Font("굴림", Font.PLAIN, 17));
-		account.setBounds(103, 87, 50, 27);
+		account.setBounds(94, 87, 60, 27);
 		contentPane.add(account);
 		
 		name_Field = new JTextField();

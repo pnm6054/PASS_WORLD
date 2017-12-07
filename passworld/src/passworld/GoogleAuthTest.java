@@ -47,9 +47,9 @@ public class GoogleAuthTest
     // Change this to the saved secret from the running the above test.
 
 	/**
-	 * @param SECRET_KEY 
-	 * @param VALIDATION_CODE
-	 * @param username
+	 *
+	 * 
+	 * @param username name of user
 	 */
     private static String SECRET_KEY = "2QV45ZM5LWEEBO6L";
     private static int VALIDATION_CODE = 911556;
@@ -92,26 +92,16 @@ public class GoogleAuthTest
      * whether this works correctly without other class.
      * */
     
-    /*
-    public static void main(String[] args) {
-    	
-    	setupMockCredentialRepository();
-    	//createCredentialsForUser();
-    	System.out.println(SECRET_KEY);
-    	authoriseUser("201561");
-
-    	System.out.println(VALIDATION_CODE);
-    }*/
-    
     /**
-     * This method is create credentials for user.
-     * key is credential for generate secret key.
-     * SECRET_KEY is the secret key.
-     * This method shows the secret key and QRcode after running this method.
+     * This method is create credentials for user.<p/>
+     * key is credential for generate secret key.<p/>
+     * SECRET_KEY is the secret key.<p/>
+     * This method shows the secret key and QRcode after running this method.<p/>
      * 
-     * @param otpAuthURL
-     * @param name
-     * @param email
+     * 
+     * @param name name of user
+     * @param email email of user
+     * @return String for compareing with otp code user typed
      */
     public static String createCredentialsForUser(String name, String email)
     {

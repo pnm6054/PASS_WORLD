@@ -102,12 +102,12 @@ public class acdata {
 	public void setMadedate(String madedate) {this.madedate = madedate;}
 	/**
 	 * Set the madedate Value of instance
-	 * @param count created date from db
 	 */
 	public int getcount() {return count;}
 	/**
 	 * Set the count Value of instance
 	 * @param count created date from db
+	 * @return number of count
 	 */
 	public void setcount(int count) {this.count = count;}
 }

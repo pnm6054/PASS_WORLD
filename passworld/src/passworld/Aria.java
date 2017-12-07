@@ -6,16 +6,14 @@ import java.util.Arrays;
 /** In cryptograpy, ARIA is a block chiper designed in 2003 <p/>
  * by a large group of South Korea researchers. <p/>
  * In 2004, the Korean Agency for Technology and Standards selected it <p/>
- * as a standard cryptograpy technique <p/><p/><p/>
+ * as a standard cryptograpy technique <p/>
  *                                     -copy from Wikipedia
  * @author NSRI
  *
  */
 public class Aria {
 	
-	/**
-	 * @param key the key for encrypted
-	 */
+
 	private static String key = "DefaultAriakey";
 	
 	private int[][] S = {
@@ -296,7 +294,7 @@ public class Aria {
 
 	private  int[] m_MasterKey = new int[32];
 	
-	//public Aria(String key) //기본키를 미리 설정
+	//public Aria(String key)
 	public Aria()
 	{
 		CreateMasterKey(this.key);
@@ -582,7 +580,6 @@ public class Aria {
 			ConvertIntArray(StrByte, m_MasterKey);
 			
 		} catch (UnsupportedEncodingException e) {
-			// TODO �옄�룞 �깮�꽦�맂 catch 釉붾줉
 			e.printStackTrace();
 		}
 
@@ -611,7 +608,6 @@ public class Aria {
 			cnt = (int) Math.ceil((double)( (double)sbyte.length / (double)16.0));
 			
 		} catch (UnsupportedEncodingException e) {
-			// TODO �옄�룞 �깮�꽦�맂 catch 釉붾줉
 			e.printStackTrace();
 		}
 
@@ -657,7 +653,6 @@ public class Aria {
 		try {
 			strDecrypt = new String(buffer.array(), "EUC-KR").replace("\0", "");
 		} catch (UnsupportedEncodingException e) {
-			// TODO �옄�룞 �깮�꽦�맂 catch 釉붾줉
 			e.printStackTrace();
 		}
 

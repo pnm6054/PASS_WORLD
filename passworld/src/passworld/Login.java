@@ -59,7 +59,7 @@ public class Login extends JFrame {
 		contentPane.setLayout(null);
 		Border lineBorder = BorderFactory.createLineBorder(Color.GRAY, 1);
 		
-		JLabel Sitename = new JLabel("site 이름");
+		JLabel Sitename = new JLabel("site 이름*");
 		Sitename.setBounds(65, 50, 100, 20);
 		Sitename.setFont(new Font("굴림", Font.PLAIN, 17));
 		Sitename.setHorizontalAlignment(JLabel.RIGHT);
@@ -94,7 +94,7 @@ public class Login extends JFrame {
 			public void keyTyped(KeyEvent e) {}
 		});
 		
-		JLabel ID = new JLabel("ID");
+		JLabel ID = new JLabel("ID*");
 		ID.setFont(new Font("굴림", Font.PLAIN, 17));
 		ID.setBounds(65, 130, 100, 20);
 		ID.setHorizontalAlignment(JLabel.RIGHT);
@@ -103,7 +103,7 @@ public class Login extends JFrame {
 		field_ID.setBounds(175, 130, 154, 21);
 		field_ID.setColumns(10);
 		
-		JLabel PW = new JLabel("암호");
+		JLabel PW = new JLabel("암호*");
 		PW.setFont(new Font("굴림", Font.PLAIN, 17));
 		PW.setBounds(65, 160, 100, 20);
 		PW.setHorizontalAlignment(JLabel.RIGHT);
@@ -200,12 +200,16 @@ public class Login extends JFrame {
 					if (isChecked) {
 						if (field_mkdate.getText().toString().length() == 10
 								|| field_mkdate.getText().toString().length() == 0) {
+							if(pwchecker()!=0) {
 							if (db.insertAccount(field_SN.getText(), field_KW.getText(), field_ID.getText(),
 									field_PW.getText(), field_mkdate.getText()) == true) {
 								JOptionPane.showMessageDialog(null, "등록성공");
 								dispose();
 							} else {
 								JOptionPane.showMessageDialog(null, "등록실패");
+							}
+							}else {
+								JOptionPane.showMessageDialog(null, "등록이 불가능한 비밀번호입니다.\n안전성 평가 결과를 확인해주세요", "ERROR", JOptionPane.ERROR_MESSAGE);
 							}
 						} else {
 							JOptionPane.showMessageDialog(null, "YYYY-MM-DD형식으로 입력해주세요\n공백으로 입력시 현재 날짜가 저장됩니다.",
@@ -225,7 +229,12 @@ public class Login extends JFrame {
 		btnGhkrdls.setBounds(245, 380, 100, 30);
 		btnGhkrdls.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				dispose();
+				switch (JOptionPane.showConfirmDialog(null, "입력된 정보들은 사라집니다.\n계속하시겠습니까?", "취소",
+						JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE)) {
+				case JOptionPane.YES_OPTION:
+					dispose();
+				break;
+				}
 			}
 		});
 

@@ -16,6 +16,7 @@ public class First extends JFrame {
 
 	/**
 	 * Launch the application.
+	 * @param args no meaning
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
