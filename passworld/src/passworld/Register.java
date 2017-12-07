@@ -98,7 +98,7 @@ public class Register extends JFrame {
 		manual.setBounds(58, 256, 247, 15);
 		contentPane.add(manual);
 		
-		ImageIcon image_man = new ImageIcon("c:/reso/3.jpg");
+		ImageIcon image_man = new ImageIcon("./3.jpg");
 		JLabel manual_img = new JLabel("",image_man,JLabel.CENTER);
 		manual_img.setBounds(36,275,355,321);
 		contentPane.add(manual_img);

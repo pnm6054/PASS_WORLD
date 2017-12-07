@@ -25,7 +25,7 @@ public class GUI_Main extends JFrame {
 	
 	public GUI_Main()  {
 		super("PASS WORLD");
-		setIconImage(Toolkit.getDefaultToolkit().getImage("c:/reso/1.png"));
+		setIconImage(Toolkit.getDefaultToolkit().getImage("./1.png"));
 		Dimension d = getToolkit().getScreenSize();
 		setSize(500, 500);
 		setLocation(d.width / 2 - getWidth() / 2, d.height / 2 - getHeight() / 2);
