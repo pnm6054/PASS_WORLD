@@ -10,7 +10,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.ColorUIResource;
 import javax.swing.table.*;
-//aaa
+
 public class GUI_Main extends JFrame {
 	JPanel search_field = new JPanel();
 	JPanel table_Panel = new JPanel();

@@ -88,9 +88,12 @@ public class First extends JFrame {
 		getContentPane().add(button);
 		button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				int result = JOptionPane.showConfirmDialog(null, "계속 하시겠습니까? \n기등록된 OTP정보는 사라집니다.","경고",JOptionPane.YES_NO_OPTION);
-				if(result==JOptionPane.YES_OPTION)
-					Register.main(null);
+				int result = JOptionPane.showConfirmDialog(null, "계속 하시겠습니까?\n 등록되어 있던 정보는 사라집니다.","경고",JOptionPane.YES_NO_OPTION);
+				if(result==JOptionPane.YES_OPTION) {
+				Register rst = new Register();
+				rst.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+				rst.setVisible(true);
+				}
 			}
 		});
 

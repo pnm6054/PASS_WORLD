@@ -39,7 +39,7 @@ public class Login extends JFrame {
 	private JButton btnsubmit = new JButton("확인");
 	private JTextArea safetycheck;
 	DB db = new DB();
-	private int safe_lv = 0;
+	private boolean isChecked = false;
 	/**
 	 * Create the frame.
 	 */
@@ -80,7 +80,6 @@ public class Login extends JFrame {
 		field_KW.setLineWrap(true);
 		field_KW.setWrapStyleWord(true);
 		field_KW.setColumns(10);
-		//Border emptyBorder = BorderFactory.createEmptyBorder(7, 7, 7, 7);
 		field_KW.setBorder(lineBorder);
 		field_KW.setEditable(true);
 		field_KW.addKeyListener(new KeyListener() {
@@ -114,6 +113,7 @@ public class Login extends JFrame {
 		field_PW.addKeyListener(new KeyListener() {
 			public void keyPressed(KeyEvent e)
 			{
+				isChecked = false;
 				System.out.println(field_PW.getText().length());
 				switch(pwchecker()) {
 	        	case 0 : safetycheck.setText("위험 - 권장 비밀번호 길이는 8자리 이상입니다.\n(등록불가)"); 
@@ -126,6 +126,7 @@ public class Login extends JFrame {
 	        	safetycheck.setForeground(Color.green);
 	        	break;
 	        	}
+				
 /*			        // tab키를 제외하고
 			        if(e.getKeyCode() != KeyEvent.VK_TAB) {
 			        	
@@ -135,7 +136,7 @@ public class Login extends JFrame {
 			public void keyTyped(KeyEvent e) {}
 		});
 		
-		safetycheck = new JTextArea("naer");
+		safetycheck = new JTextArea();
 		safetycheck.setBounds(175, 190, 154, 40);
 		safetycheck.setCaretPosition(field_KW.getText().length());
 		safetycheck.setLineWrap(true);
@@ -157,7 +158,18 @@ public class Login extends JFrame {
 		pw_eq.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if(field_PW.getText().equals(field_re_PW.getText())){
-					JOptionPane.showMessageDialog(null, "비밀번호 일치");
+					if (!db.searchPw(field_PW.getText())) {
+						switch (JOptionPane.showConfirmDialog(null, "이미 등록되어있는 비밀번호 입니다.\n계속하시겠습니까?", "비밀번호 중복",
+								JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE)) {
+						case JOptionPane.YES_OPTION:
+							JOptionPane.showMessageDialog(null, "비밀번호 일치");
+							isChecked = true;
+							break;
+						}
+					} else {
+						JOptionPane.showMessageDialog(null, "비밀번호 일치");
+						isChecked = true;
+					}
 				}else {
 					JOptionPane.showMessageDialog(null, "비밀번호 불일치");
 				}
@@ -185,32 +197,15 @@ public class Login extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				if (field_PW.getText().toString().length() != 0 && field_ID.getText().toString().length() != 0
 						&& field_SN.getText().toString().length() != 0) {
-					if (field_PW.getText().equals(field_re_PW.getText())) {
-
+					if (isChecked) {
 						if (field_mkdate.getText().toString().length() == 10
 								|| field_mkdate.getText().toString().length() == 0) {
-							if (!db.searchPw(field_PW.getText())) {
-								switch (JOptionPane.showConfirmDialog(null, "이미 등록하신 비밀번호 입니다.\n등록하시겠습니까?", "비밀번호 중복등록",
-										JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE)) {
-								case JOptionPane.YES_OPTION:
-									if (db.insertAccount(field_SN.getText(), field_KW.getText(), field_ID.getText(),
-											field_PW.getText(), field_mkdate.getText()) == true) {
-										JOptionPane.showMessageDialog(null, "등록성공");
-										dispose();
-									} else {
-										JOptionPane.showMessageDialog(null, "등록실패");
-									}
-									break;
-								}
-
+							if (db.insertAccount(field_SN.getText(), field_KW.getText(), field_ID.getText(),
+									field_PW.getText(), field_mkdate.getText()) == true) {
+								JOptionPane.showMessageDialog(null, "등록성공");
+								dispose();
 							} else {
-								if (db.insertAccount(field_SN.getText(), field_KW.getText(), field_ID.getText(),
-										field_PW.getText(), field_mkdate.getText()) == true) {
-									JOptionPane.showMessageDialog(null, "등록성공");
-									dispose();
-								} else {
-									JOptionPane.showMessageDialog(null, "등록실패");
-								}
+								JOptionPane.showMessageDialog(null, "등록실패");
 							}
 						} else {
 							JOptionPane.showMessageDialog(null, "YYYY-MM-DD형식으로 입력해주세요\n공백으로 입력시 현재 날짜가 저장됩니다.",
@@ -267,8 +262,26 @@ public class Login extends JFrame {
 		btnsubmit.setBounds(105, 380, 100, 30);
 		btnsubmit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(db.updateAccount(field_SN.getText(), field_KW.getText(), field_ID.getText(), field_PW.getText(), data.getIndex())) {
-					dispose();
+				if (field_PW.getText().toString().length() != 0 && field_ID.getText().toString().length() != 0
+						&& field_SN.getText().toString().length() != 0) {
+					if (isChecked) {
+						if (field_mkdate.getText().toString().length() == 10
+								|| field_mkdate.getText().toString().length() == 0) {
+							if(db.updateAccount(field_SN.getText(), field_KW.getText(), field_ID.getText(), field_PW.getText(), data.getIndex())) {
+								JOptionPane.showMessageDialog(null, "등록성공");
+								dispose();
+							} else {
+								JOptionPane.showMessageDialog(null, "등록실패");
+							}
+						} else {
+							JOptionPane.showMessageDialog(null, "YYYY-MM-DD형식으로 입력해주세요\n공백으로 입력시 현재 날짜가 저장됩니다.",
+									"ERROR", JOptionPane.ERROR_MESSAGE);
+						}
+					} else {
+						JOptionPane.showMessageDialog(null, "비밀번호 일치 여부 검사를 해주세요", "ERROR", JOptionPane.ERROR_MESSAGE);
+					}
+				} else {
+					JOptionPane.showMessageDialog(null, "필수 항목 미입력", "ERROR", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
@@ -279,13 +292,10 @@ public class Login extends JFrame {
 			String specChar = "[0-9|a-z|A-Z|ㄱ-ㅎ|ㅏ-ㅣ|가-힝|]*";
 			if(!field_PW.getText().matches(specChar)) {
 		            System.out.println("일치~");
-		            safe_lv=2;
 		            return 2;
 		        }
-			safe_lv=1;
 			return 1;
 		}
-		safe_lv=0;
 		return 0;
 	}
 }

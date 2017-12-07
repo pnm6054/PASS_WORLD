@@ -221,6 +221,23 @@ public class DB {
 		}
 		return isSuccess;
 	}
+	protected boolean resettable() {
+		boolean isSuccess = true;
+		String sql = "CREATE TABLE Main (siteid text not null collate nocase, keyword text default siteid collate nocase, id text not null, pw text default 'UNKNOWN', makedate not null default current_date, count int not null default 0, unique (siteid,id));";
+		try {
+			System.out.println(sql);
+			stmt = conn.prepareStatement("drop table Main");
+			stmt.executeUpdate();
+			stmt = conn.prepareStatement(sql);
+			stmt.executeUpdate();
+		}catch(SQLException e) {
+			System.err.println("Error : Can't reset main table\n");
+			System.out.println(e.getMessage());
+			isSuccess = false;
+		}
+		return isSuccess;
+	}
+	
     /**
      * This method save register information in database.
      * @param username
@@ -229,6 +246,7 @@ public class DB {
 	protected boolean registerInfo(String username, String secretcode) {
 		boolean isSuccess = true;
 		String sql = "update Google_Auth set secretcode = ?, username = ? where rowid = 1";
+		resettable();
 		try {
 			System.out.println(sql);
 			stmt = conn.prepareStatement(sql);
