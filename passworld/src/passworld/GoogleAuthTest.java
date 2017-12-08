@@ -115,7 +115,7 @@ public class GoogleAuthTest
         db.registerInfo(name,SECRET_KEY);
         System.out.println("Please register (otpauth uri): " + otpAuthURL);
         System.out.println("Secret key is " + SECRET_KEY);
-        new QRcode(otpAuthURL); //QR�ڵ� â ���
+        new QRcode(otpAuthURL); 
         db.closeDB();
         return SECRET_KEY;
     }
