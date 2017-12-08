@@ -115,7 +115,7 @@ public class GoogleAuthTest
         db.registerInfo(name,SECRET_KEY);
         System.out.println("Please register (otpauth uri): " + otpAuthURL);
         System.out.println("Secret key is " + SECRET_KEY);
-        new QRcode(otpAuthURL); //QRÄÚµå Ã¢ Ãâ·Â
+        new QRcode(otpAuthURL); //QRì½”ë“œ ì°½ ì¶œë ¥
         db.closeDB();
         return SECRET_KEY;
     }
@@ -145,38 +145,38 @@ public class GoogleAuthTest
     }
 }
     class QRcode extends JDialog implements MouseListener{
-        BufferedImage img=null;// ¹öÆÛ(¸Ş¸ğ¸®)¿¡ ÀÌ¹ÌÁö¸¦ ¿Ã¸± ¶§ ¾²ÀÓ
-    	Dimension d = getToolkit().getScreenSize(); //È­¸é Å©±â ÃøÁ¤
+        BufferedImage img=null;// ë²„í¼(ë©”ëª¨ë¦¬)ì— ì´ë¯¸ì§€ë¥¼ ì˜¬ë¦´ ë•Œ ì“°ì„
+    	Dimension d = getToolkit().getScreenSize(); //í™”ë©´ í¬ê¸° ì¸¡ì •
         public QRcode(String url){
-        	setTitle("Å¬¸¯ÇÏ¸é ´İÈû"); 
+        	setTitle("í´ë¦­í•˜ë©´ ë‹«í˜"); 
             setSize(215,240); 
-        	setLocation(d.width / 2 - getWidth() / 2, d.height / 2 - getHeight() / 2); //Á¤Áß¾Ó¿¡ »ı¼º
-        	setResizable(false); //Å©±âÁ¶Àı ºÒ°¡
+        	setLocation(d.width / 2 - getWidth() / 2, d.height / 2 - getHeight() / 2); //ì •ì¤‘ì•™ì— ìƒì„±
+        	setResizable(false); //í¬ê¸°ì¡°ì ˆ ë¶ˆê°€
             setVisible(true);
             try {
-                img = ImageIO.read(new URL(url));// À©µµ¿ì¿¡¼± °æ·Î°¡ \¶ó¼­ \\¶ó°í ÀÔ·ÂÇØÁà¾ß ÇÑ´Ù.
-            } catch (IOException e) {// ImageIOÀÌ°ÍÀ» ÀûÀ¸¸é catch¹®À¸·Î ¿¹¿ÜÃ³¸®¸¦ ÇØ¾ß ÇÑ´Ù. ¿¹¿ÜÃ³¸®¸¦ ÇÏµµ·Ï Å¬·¡½º ¼³°èÀÚ°¡ Àû¾îµÎ¾î¼­ ¹İµå½Ã ÇØÁà¾ß ÇÑ´Ù.
-                // ÀÔ·Â°ú Ãâ·ÂÀÌ rfid, ¼ÒÄÏÅë½Å, À©µµ¿ì, ÀÓº£µğµå µîµî ÀÔÃâ·ÂÀÌ ³Ê¹« ´Ù¾çÇÏ±â ¶§¹®¿¡..
+                img = ImageIO.read(new URL(url));// ìœˆë„ìš°ì—ì„  ê²½ë¡œê°€ \ë¼ì„œ \\ë¼ê³  ì…ë ¥í•´ì¤˜ì•¼ í•œë‹¤.
+            } catch (IOException e) {// ImageIOì´ê²ƒì„ ì ìœ¼ë©´ catchë¬¸ìœ¼ë¡œ ì˜ˆì™¸ì²˜ë¦¬ë¥¼ í•´ì•¼ í•œë‹¤. ì˜ˆì™¸ì²˜ë¦¬ë¥¼ í•˜ë„ë¡ í´ë˜ìŠ¤ ì„¤ê³„ìê°€ ì ì–´ë‘ì–´ì„œ ë°˜ë“œì‹œ í•´ì¤˜ì•¼ í•œë‹¤.
+                // ì…ë ¥ê³¼ ì¶œë ¥ì´ rfid, ì†Œì¼“í†µì‹ , ìœˆë„ìš°, ì„ë² ë””ë“œ ë“±ë“± ì…ì¶œë ¥ì´ ë„ˆë¬´ ë‹¤ì–‘í•˜ê¸° ë•Œë¬¸ì—..
                 e.printStackTrace();
                 System.out.println(e.getMessage());
-                System.out.println("¿¡·¯ ³ª¼Ì½À´Ï´Ù!!");// ÀÏºÎ·¯ ¾ø´Â ÆÄÀÏÀ» ¿­¾î¼­ ¿¡·¯¹®À» Ãâ·ÂÇØºÁ¶ó, (ÀÌ·± ÇÁ¸°Æ®¹®ÀÇ Ãâ·ÂÀº ÇÊ¿ä¾ø´Ù) ÀÌ ÁÙÀ» »«°ÍÀÌ ¿¹¿ÜÃ³¸®ÀÇ ±âº»ÇüÅÂ
-                System.exit(0);// ÀÌ ±¸¹®Àº ÄÄÇ»ÅÍ¸¦ ºüÁ® ³ª¿Í¶ó´Â °ÍÀÌ´Ù. ÀÎÀÚ°ª 0ÀÇ ÀÇ¹Ì´Â 0ÀÏ¶© ¾î¶²°Ô ½ÇÆĞ, 1Àº ¿¬°áµÇ¾ú´Ù ½ÇÆĞ, 2´Â... ¼ıÀÚ·Î ÀÇ¹Ì¸¦ ºÎ¿©ÇÒ ¼ö ÀÖ´Ù.
+                System.out.println("ì—ëŸ¬ ë‚˜ì…¨ìŠµë‹ˆë‹¤!!");// ì¼ë¶€ëŸ¬ ì—†ëŠ” íŒŒì¼ì„ ì—´ì–´ì„œ ì—ëŸ¬ë¬¸ì„ ì¶œë ¥í•´ë´ë¼, (ì´ëŸ° í”„ë¦°íŠ¸ë¬¸ì˜ ì¶œë ¥ì€ í•„ìš”ì—†ë‹¤) ì´ ì¤„ì„ ëº€ê²ƒì´ ì˜ˆì™¸ì²˜ë¦¬ì˜ ê¸°ë³¸í˜•íƒœ
+                //System.exit(0);// ì´ êµ¬ë¬¸ì€ ì»´í“¨í„°ë¥¼ ë¹ ì ¸ ë‚˜ì™€ë¼ëŠ” ê²ƒì´ë‹¤. ì¸ìê°’ 0ì˜ ì˜ë¯¸ëŠ” 0ì¼ë• ì–´ë–¤ê²Œ ì‹¤íŒ¨, 1ì€ ì—°ê²°ë˜ì—ˆë‹¤ ì‹¤íŒ¨, 2ëŠ”... ìˆ«ìë¡œ ì˜ë¯¸ë¥¼ ë¶€ì—¬í•  ìˆ˜ ìˆë‹¤.
             }
             MyPanel1 panel = new MyPanel1();
             add(panel);
             pack();
-            addMouseListener(this);//Å¬¸¯½Ã ´İÈ÷´Â ¾×¼Ç
+            addMouseListener(this);//í´ë¦­ì‹œ ë‹«íˆëŠ” ì•¡ì…˜
         }
         
         class MyPanel1 extends JPanel{
-            public void paint(Graphics g){// ÆäÀÎÆ® ÄÄÆ÷³ÍÆ®³ª ÆäÀÎÆ®³ª °°´Ù.
+            public void paint(Graphics g){// í˜ì¸íŠ¸ ì»´í¬ë„ŒíŠ¸ë‚˜ í˜ì¸íŠ¸ë‚˜ ê°™ë‹¤.
                 g.drawImage(img, 0, 0, null);
             }        
-            public Dimension getPreferredSize(){// ¸¸¾à ¿ÀÅ¸µîÀ¸·Î ¿À¹ö¶óÀÌµå°¡ ¾ÈµÇ¾ú´Ù¸é ÅøÀ» ÀÌ¿ëÇØ ºÒ·¯¿Í¶ó
+            public Dimension getPreferredSize(){// ë§Œì•½ ì˜¤íƒ€ë“±ìœ¼ë¡œ ì˜¤ë²„ë¼ì´ë“œê°€ ì•ˆë˜ì—ˆë‹¤ë©´ íˆ´ì„ ì´ìš©í•´ ë¶ˆëŸ¬ì™€ë¼
                 if (img == null)
                     return new Dimension(300, 300);
                 else
-                    return new Dimension(img.getWidth(null), img.getHeight(null));// ÀÎÀÚ°ªÀÌ (null)ÀÌ³ª ()ÀÌ³ª °°´Ù.
+                    return new Dimension(img.getWidth(null), img.getHeight(null));// ì¸ìê°’ì´ (null)ì´ë‚˜ ()ì´ë‚˜ ê°™ë‹¤.
             }
         }
         public void mouseClicked(MouseEvent arg0) {super.dispose();}
