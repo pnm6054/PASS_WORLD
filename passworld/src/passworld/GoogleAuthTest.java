@@ -160,7 +160,7 @@ public class GoogleAuthTest
                 e.printStackTrace();
                 System.out.println(e.getMessage());
                 System.out.println("에러 나셨습니다!!");// 일부러 없는 파일을 열어서 에러문을 출력해봐라, (이런 프린트문의 출력은 필요없다) 이 줄을 뺀것이 예외처리의 기본형태
-                System.exit(0);// 이 구문은 컴퓨터를 빠져 나와라는 것이다. 인자값 0의 의미는 0일땐 어떤게 실패, 1은 연결되었다 실패, 2는... 숫자로 의미를 부여할 수 있다.
+                //System.exit(0);// 이 구문은 컴퓨터를 빠져 나와라는 것이다. 인자값 0의 의미는 0일땐 어떤게 실패, 1은 연결되었다 실패, 2는... 숫자로 의미를 부여할 수 있다.
             }
             MyPanel1 panel = new MyPanel1();
             add(panel);
