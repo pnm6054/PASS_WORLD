@@ -46,7 +46,7 @@ public class Login extends JFrame {
 	public Login() {
 		
 		setTitle("PASS WORLD");
-		setIconImage(Toolkit.getDefaultToolkit().getImage("ext/1.png"));
+		setIconImage(Toolkit.getDefaultToolkit().getImage("./ext/1.png"));
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		Dimension d = getToolkit().getScreenSize();
 		setSize(450, 500);
